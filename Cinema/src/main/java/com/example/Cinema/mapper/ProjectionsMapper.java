@@ -16,11 +16,11 @@ public interface ProjectionsMapper {
     @Select("select count(*) from projections where id = #{id}")
     int findOne(Projections projection);
 
-    @Select("select * from projections")
+    @Select("select id, startTime, endTime, date, id_movie as idMovie, id_hall as idHall from projections")
     List<Projections> findAll();
 
-    @Insert("insert into projections(id, date, startTime, endTime, id_hall, id_movie)"+
-            "values (#{id}, #{date}, #{startTime}, #{endTime}, #{idHall}, #{idMovie})")
+    @Insert("insert into projections(date, startTime, endTime, id_hall, id_movie)"+
+            "values (#{date}, #{startTime}, #{endTime}, #{idHall}, #{idMovie})")
     void insert(Projections projection);
 
     @Update("update projections " +
@@ -28,14 +28,14 @@ public interface ProjectionsMapper {
             "where id = #{id}")
     void update(Projections projection);
 
-    @Select("select m.name as movieName , p.date as date , p.time as time, h.name as hallName " +
+    @Select("select m.name as movieName , p.date as date , p.startTime as time, h.name as hallName " +
             "from projections as p " +
             "inner join movies as m on p.id_movie = m.id " +
             "inner join halls as h on p.id_hall = h.id " +
             "where m.name = #{movieName} and p.date = #{date}")
     List<ProjectionView> getSelected(Filter filter);
 
-    @Select("select m.name as movieName , p.date as date , p.time as time, h.name as hallName " +
+    @Select("select m.name as movieName , p.date as date , p.startTime as time, h.name as hallName " +
             "from projections as p " +
             "inner join movies as m on p.id_movie = m.id " +
             "inner join halls as h on p.id_hall = h.id " +

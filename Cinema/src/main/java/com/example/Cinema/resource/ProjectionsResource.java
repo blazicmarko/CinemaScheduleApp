@@ -37,6 +37,7 @@ public class ProjectionsResource {
             projection.setEndTime(time);
             if (projectionsMapper.isFree(projection) == 0) {
                 projectionsMapper.insert(projection);
+
             } else {
                 throw new AppointmentCheckException("This appointment is full. Choose another one!");
             }
@@ -49,7 +50,7 @@ public class ProjectionsResource {
     @PostMapping("/update")
     public void update(@RequestBody Projections projection){
         if(projectionsMapper.findOne(projection) == 1) {
-
+            //NADJENU PROJEKCIJU IZMENITI JOJ PODATKE KOJI NISU NULL I SA NJOM RADITI
             Time movieTime = moviesMapper.findTime(projection);
             Time time = projectionsMapper.getEndTime(projection, movieTime);
             projection.setEndTime(time);
