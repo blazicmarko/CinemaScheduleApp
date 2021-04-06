@@ -1,14 +1,26 @@
 package com.example.Cinema.model;
 
 import java.sql.Time;
-import java.util.Date;
+import java.sql.Date;
 
 public class Projections {
     private Integer id;
     private Integer idMovie;
     private Integer idHall;
     private Date date;
-    private Time time;
+    private Time startTime;
+    private Time endTime;
+
+    public Projections() {
+    }
+
+    public Projections(Integer idMovie, Integer idHall, Date date, Time time, Time endTime) {
+        this.idMovie = idMovie;
+        this.idHall = idHall;
+        this.date = date;
+        this.startTime = time;
+        this.endTime = endTime;
+    }
 
     public Integer getId() {
         return id;
@@ -41,12 +53,21 @@ public class Projections {
     public void setDate(Date date) {
         this.date = date;
     }
-
-    public Time getTime() {
-        return time;
+    public Time getStartTime() {
+        return startTime;
     }
 
-    public void setTime(Time time) {
-        this.time = time;
+    public void setStartTime(Time startTime) {
+        this.startTime = startTime;
     }
+
+    public Time getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Time endTime) {
+        this.endTime = endTime;
+    }
+
+
 }

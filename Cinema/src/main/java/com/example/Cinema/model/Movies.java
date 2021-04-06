@@ -5,7 +5,7 @@ import java.sql.Time;
 public class Movies {
     private String name;
     private Integer id;
-    private Long grade;
+    private Double grade;
     private Integer year;
     private Integer idGenre;
     private Time time;
@@ -14,7 +14,7 @@ public class Movies {
 
     }
 
-    public Movies(String name, Long grade, Integer year, Integer idGenre, Time time) {
+    public Movies(String name, Double grade, Integer year, Integer idGenre, Time time) {
         this.name = name;
         this.grade = grade;
         this.year = year;
@@ -46,11 +46,11 @@ public class Movies {
         this.id = id;
     }
 
-    public Long getGrade() {
+    public Double getGrade() {
         return grade;
     }
 
-    public void setGrade(Long grade) {
+    public void setGrade(Double grade) {
         this.grade = grade;
     }
 
