@@ -16,4 +16,10 @@ public interface HallsMapper {
 
     @Select("select count(*) from halls where id = #{idHall}")
     Integer findHall(Integer idHall);
+
+    @Select("select id " +
+            "from halls " +
+            "order by id DESC " +
+            "limit 1")
+    Integer getLastId();
 }

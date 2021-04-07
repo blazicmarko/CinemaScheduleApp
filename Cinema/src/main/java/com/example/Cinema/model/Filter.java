@@ -1,8 +1,10 @@
 package com.example.Cinema.model;
 
+import javax.validation.constraints.NotNull;
 import java.sql.Date;
 
 public class Filter {
+    @NotNull
     private String movieName;
     private Date date;
 

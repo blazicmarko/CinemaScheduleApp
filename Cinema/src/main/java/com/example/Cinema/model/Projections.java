@@ -1,25 +1,29 @@
 package com.example.Cinema.model;
 
-import java.sql.Time;
-import java.sql.Date;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 
 public class Projections {
+
     private Integer id;
+    @NotNull
+    @Min(value = 1)
     private Integer idMovie;
+    @NotNull
+    @Min(value = 1)
     private Integer idHall;
-    private Date date;
-    private Time startTime;
-    private Time endTime;
+    @NotNull
+    @FutureOrPresent
+    private LocalDate date;
+    @NotNull
+    private LocalTime startTime;
+    private LocalTime endTime;
 
     public Projections() {
-    }
-
-    public Projections(Integer idMovie, Integer idHall, Date date, Time time, Time endTime) {
-        this.idMovie = idMovie;
-        this.idHall = idHall;
-        this.date = date;
-        this.startTime = time;
-        this.endTime = endTime;
     }
 
     public Integer getId() {
@@ -46,28 +50,28 @@ public class Projections {
         this.idHall = idHall;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
-    public Time getStartTime() {
+
+    public LocalTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Time startTime) {
+    public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
     }
 
-    public Time getEndTime() {
+    public LocalTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Time endTime) {
+    public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
-
 
 }

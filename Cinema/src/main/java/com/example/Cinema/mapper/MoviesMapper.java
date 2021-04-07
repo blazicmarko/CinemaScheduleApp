@@ -7,9 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 
 @Component
@@ -30,8 +29,14 @@ public interface MoviesMapper {
 
     @Select("select time from movies " +
             "where id = #{idMovie}")
-    Time findTime(Projections projection);
+    LocalTime findTime(Projections projection);
 
     @Select("select count(*) from movies where id = #{idMovie}")
     Integer findMovie(Integer idMovie);
+
+    @Select("select id " +
+            "from movies " +
+            "order by id DESC " +
+            "limit 1")
+    Integer getLastId();
 }

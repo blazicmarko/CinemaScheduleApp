@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 
 @Component
@@ -42,8 +43,6 @@ public interface ProjectionsMapper {
             "where m.name = #{movieName}")
     List<ProjectionView> getSelectedNoDate(Filter filter);
 
-
-
     @Select("select count(*) " +
             "from projections as p " +
             "where p.date = #{date} " +
@@ -52,7 +51,7 @@ public interface ProjectionsMapper {
     Integer isFree(Projections projection);
 
     @Select("select addtime(#{projection.startTime},#{time})")
-    Time getEndTime(Projections projection, Time time);
+    LocalTime getEndTime(Projections projection, LocalTime time);
 
     @Select("select id, startTime, endTime, date, id_movie as idMovie, id_hall as idHall from projections " +
             "where id = #{id}")

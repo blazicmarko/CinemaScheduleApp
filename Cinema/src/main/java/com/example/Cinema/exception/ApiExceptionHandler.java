@@ -2,9 +2,15 @@ package com.example.Cinema.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.validation.ValidationException;
 import java.time.ZonedDateTime;
 
 @ControllerAdvice
@@ -12,10 +18,10 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(value = {AppointmentCheckException.class})
     public ResponseEntity<Object> handleAppointmentCheckException(AppointmentCheckException e){
-        HttpStatus badRequest = HttpStatus.FORBIDDEN;
+        HttpStatus badRequest = HttpStatus.CONFLICT;
         ApiException apiException = new ApiException(
                 e.getMessage(),
-                HttpStatus.FORBIDDEN,
+                HttpStatus.CONFLICT,
                 ZonedDateTime.now()
         );
         return new ResponseEntity<>(apiException, badRequest);
@@ -56,10 +62,10 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(value = {IdExistsException.class})
     public ResponseEntity<Object> handleIdExistsException(IdExistsException e){
-        HttpStatus badRequest = HttpStatus.FORBIDDEN;
+        HttpStatus badRequest = HttpStatus.CONFLICT;
         ApiException apiException = new ApiException(
                 e.getMessage(),
-                HttpStatus.FORBIDDEN,
+                HttpStatus.CONFLICT,
                 ZonedDateTime.now()
         );
         return new ResponseEntity<>(apiException, badRequest);
@@ -82,6 +88,36 @@ public class ApiExceptionHandler {
         ApiException apiException = new ApiException(
                 e.getMessage(),
                 HttpStatus.NO_CONTENT,
+                ZonedDateTime.now()
+        );
+        return new ResponseEntity<>(apiException, badRequest);
+    }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleNoArgumentValid(MethodArgumentNotValidException e){
+        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
+        ApiException apiException = new ApiException(
+                e.getMessage(),
+                HttpStatus.BAD_REQUEST,
+                ZonedDateTime.now()
+        );
+        return new ResponseEntity<>(apiException, badRequest);
+    }
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Object> handleNotReadableArgumentValid(HttpMessageNotReadableException e){
+        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
+        ApiException apiException = new ApiException(
+                e.getMessage(),
+                HttpStatus.BAD_REQUEST,
+                ZonedDateTime.now()
+        );
+        return new ResponseEntity<>(apiException, badRequest);
+    }
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<Object> handleNotValid(ValidationException e){
+        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
+        ApiException apiException = new ApiException(
+                e.getMessage(),
+                HttpStatus.BAD_REQUEST,
                 ZonedDateTime.now()
         );
         return new ResponseEntity<>(apiException, badRequest);
