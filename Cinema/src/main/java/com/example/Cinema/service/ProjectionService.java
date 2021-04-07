@@ -45,7 +45,6 @@ public class ProjectionService {
         }
         else
             throw new IdExistsException("Projection with id "+ projection.getId()+" already exists.");
-
     }
 
     public List<Projections> getAll(){
@@ -58,6 +57,12 @@ public class ProjectionService {
     }
 
     public void update(Projections projection){
+        if(projection.getIdHall() > hallsService.getLastId()){
+            throw new NoHallException("Hall with that id doesn't exists.");
+        }
+        if(projection.getIdMovie() > moviesService.getLastId()){
+            throw new NoMovieException("Movie with that id doesn't exists.");
+        }
         Projections oldProjection;
         if(projection.getId() != null){
             oldProjection = projectionsMapper.findSpecific(projection);
@@ -89,6 +94,9 @@ public class ProjectionService {
             } else {
                 throw new AppointmentCheckException("This appointment is full. Choose another one!");
             }
+        }
+        else{
+            throw new NoIdException("There is no projection with that id. Pick one that exists.");
         }
     }
 

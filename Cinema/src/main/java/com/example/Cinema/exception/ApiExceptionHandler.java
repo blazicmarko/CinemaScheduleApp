@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.ValidationException;
+import java.net.ConnectException;
+import java.sql.SQLException;
 import java.time.ZonedDateTime;
 
 @ControllerAdvice
@@ -118,6 +120,17 @@ public class ApiExceptionHandler {
         ApiException apiException = new ApiException(
                 e.getMessage(),
                 HttpStatus.BAD_REQUEST,
+                ZonedDateTime.now()
+        );
+        return new ResponseEntity<>(apiException, badRequest);
+    }
+
+    @ExceptionHandler(value ={ConnectException.class})
+    public ResponseEntity<Object> handleDatabaseException(ConnectException e){
+        HttpStatus badRequest = HttpStatus.INTERNAL_SERVER_ERROR;
+        ApiException apiException = new ApiException(
+                "Database is temporary disconnected. Please try again later.",
+                HttpStatus.INTERNAL_SERVER_ERROR,
                 ZonedDateTime.now()
         );
         return new ResponseEntity<>(apiException, badRequest);
