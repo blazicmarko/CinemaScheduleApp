@@ -31,4 +31,7 @@ public interface MoviesMapper {
     @Select("select time from movies " +
             "where id = #{idMovie}")
     Time findTime(Projections projection);
+
+    @Select("select count(*) from movies where id = #{idMovie}")
+    Integer findMovie(Integer idMovie);
 }

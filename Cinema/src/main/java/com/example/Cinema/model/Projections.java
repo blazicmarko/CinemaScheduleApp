@@ -1,8 +1,5 @@
 package com.example.Cinema.model;
 
-import org.jetbrains.annotations.NotNull;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.sql.Time;
 import java.sql.Date;
 
@@ -12,7 +9,6 @@ public class Projections {
     private Integer idHall;
     private Date date;
     private Time startTime;
-
     private Time endTime;
 
     public Projections() {

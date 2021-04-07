@@ -53,4 +53,8 @@ public interface ProjectionsMapper {
 
     @Select("select addtime(#{projection.startTime},#{time})")
     Time getEndTime(Projections projection, Time time);
+
+    @Select("select id, startTime, endTime, date, id_movie as idMovie, id_hall as idHall from projections " +
+            "where id = #{id}")
+    Projections findSpecific(Projections projection);
 }

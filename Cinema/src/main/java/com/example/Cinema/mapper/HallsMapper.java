@@ -13,4 +13,7 @@ public interface HallsMapper {
 
     @Select("select * from halls")
     List<Halls> findAll();
+
+    @Select("select count(*) from halls where id = #{idHall}")
+    Integer findHall(Integer idHall);
 }
