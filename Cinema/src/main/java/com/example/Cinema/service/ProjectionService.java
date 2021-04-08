@@ -30,18 +30,16 @@ public class ProjectionService {
     }
 
     public void insert(Projections projection) {
-        if(projectionsMapper.findOne(projection) == 0) {
-            LocalTime movieTime = moviesService.findTime(projection);
-            LocalTime time = projectionsMapper.getEndTime(projection, movieTime);
-            projection.setEndTime(time);
-            if (projectionsMapper.isFree(projection) == 0) {
-                projectionsMapper.insert(projection);
-            } else {
-                throw new AppointmentCheckException("This appointment is full. Choose another one!");
-            }
+        LocalTime movieTime = moviesService.findTime(projection);
+        LocalTime time = projectionsMapper.getEndTime(projection, movieTime);
+        projection.setEndTime(time);
+        Integer numOfProjections;
+        numOfProjections = projectionsMapper.isFreeToInsert(projection);
+        if (numOfProjections == 0) {
+            projectionsMapper.insert(projection);
+        } else {
+            throw new AppointmentCheckException("This appointment is full. Choose another one!");
         }
-        else
-            throw new IdExistsException("Projection with id "+ projection.getId()+" already exists.");
     }
 
     public List<Projections> getAll(){
@@ -62,39 +60,34 @@ public class ProjectionService {
         else {
             throw new NoIdException("There is no inserted id in table projections.");
         }
-        if(oldProjection != null) {
-            if(projection.getDate() != null){
-                updateVars.put("date",projection.getDate().toString());
-                oldProjection.setDate(projection.getDate());
-            }
-            if(projection.getStartTime() != null){
-                updateVars.put("startTime",projection.getStartTime().toString());
-                oldProjection.setStartTime(projection.getStartTime());
-            }
-            if(projection.getIdHall() != null){
-                updateVars.put("id_hall",projection.getIdHall().toString());
-                oldProjection.setIdHall(projection.getIdHall());
-            }
-            if(projection.getIdMovie() != null){
-                updateVars.put("id_movie",projection.getIdMovie().toString());
-                oldProjection.setIdMovie(projection.getIdMovie());
-            }
-
-            LocalTime movieTime = moviesService.findTime(oldProjection);
-            LocalTime time = projectionsMapper.getEndTime(oldProjection, movieTime);
-            oldProjection.setEndTime(time);
-            Integer numOfProjections;
-            numOfProjections = projectionsMapper.isFree(oldProjection);
-            if (numOfProjections == 0) {
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-                updateVars.put("endTime", oldProjection.getEndTime().format(dtf));
-                projectionsMapper.update(updateVars , projection.getId());
-            } else {
-                throw new AppointmentCheckException("This appointment is full. Choose another one!");
-            }
+        if(projection.getDate() != null){
+            updateVars.put("date",projection.getDate().toString());
+            oldProjection.setDate(projection.getDate());
         }
-        else{
-            throw new NoIdException("There is no projection with that id. Pick one that exists.");
+        if(projection.getStartTime() != null){
+            updateVars.put("startTime",projection.getStartTime().toString());
+            oldProjection.setStartTime(projection.getStartTime());
+        }
+        if(projection.getIdHall() != null){
+            updateVars.put("id_hall",projection.getIdHall().toString());
+            oldProjection.setIdHall(projection.getIdHall());
+        }
+        if(projection.getIdMovie() != null){
+            updateVars.put("id_movie",projection.getIdMovie().toString());
+            oldProjection.setIdMovie(projection.getIdMovie());
+        }
+
+        LocalTime movieTime = moviesService.findTime(oldProjection);
+        LocalTime time = projectionsMapper.getEndTime(oldProjection, movieTime);
+        oldProjection.setEndTime(time);
+        Integer numOfProjections;
+        numOfProjections = projectionsMapper.isFreeToUpdate(oldProjection);
+        if (numOfProjections == 0) {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+            updateVars.put("endTime", oldProjection.getEndTime().format(dtf));
+            projectionsMapper.update(updateVars , projection.getId());
+        } else {
+            throw new AppointmentCheckException("This appointment is full. Choose another one!");
         }
     }
 

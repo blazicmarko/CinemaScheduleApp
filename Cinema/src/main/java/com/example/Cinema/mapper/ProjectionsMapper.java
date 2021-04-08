@@ -57,10 +57,19 @@ public interface ProjectionsMapper {
             "from projections as p " +
             "where p.date = #{date} " +
             "and p.id_hall = #{idHall} " +
-            "and p.id <> #{id} " +
             "and (p.startTime between #{startTime} and #{endTime} " +
             "or p.endTime between #{startTime} and #{endTime})")
-    Integer isFree(Projections projection);
+    Integer isFreeToInsert(Projections projection);
+
+    @Select("select count(*) " +
+            "from projections as p " +
+            "where p.date = #{date} " +
+            "and p.id_hall = #{idHall} " +
+            "and p.id != #{id} " +
+            "and (p.startTime between #{startTime} and #{endTime} " +
+            "or p.endTime between #{startTime} and #{endTime})")
+    Integer isFreeToUpdate(Projections projection);
+
 
     @Select("select addtime(#{projection.startTime},#{time})")
     LocalTime getEndTime(Projections projection, LocalTime time);
