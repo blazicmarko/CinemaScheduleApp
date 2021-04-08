@@ -3,12 +3,15 @@ package com.example.Cinema.mapper;
 import com.example.Cinema.model.Filter;
 import com.example.Cinema.model.ProjectionView;
 import com.example.Cinema.model.Projections;
+import com.example.Cinema.model.ProjectionsUpdate;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
 import java.sql.Time;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Mapper
@@ -24,10 +27,17 @@ public interface ProjectionsMapper {
             "values (#{date}, #{startTime}, #{endTime}, #{idHall}, #{idMovie})")
     void insert(Projections projection);
 
-    @Update("update projections " +
-            "set date = #{date}, startTime = #{startTime}, endTime = #{endTime}, id_hall = #{idHall}, id_movie = #{idMovie} " +
-            "where id = #{id}")
-    void update(Projections projection);
+
+    @Update({
+            "<script>",
+            "update projections set",
+            "<foreach item = 'item' index = 'index' collection = 'vars' separator =','>",
+            "${index} = #{item}",
+            "</foreach>",
+            "where id = #{id}",
+            "</script>"
+    })
+    void update(@Param("vars")Map<String,String> vars, @Param("id")Integer id);
 
     @Select("select m.name as movieName , p.date as date , p.startTime as time, h.name as hallName " +
             "from projections as p " +
@@ -47,7 +57,9 @@ public interface ProjectionsMapper {
             "from projections as p " +
             "where p.date = #{date} " +
             "and p.id_hall = #{idHall} " +
-            "and #{endTime} between p.startTime and p.endTime")
+            "and p.id <> #{id} " +
+            "and (p.startTime between #{startTime} and #{endTime} " +
+            "or p.endTime between #{startTime} and #{endTime})")
     Integer isFree(Projections projection);
 
     @Select("select addtime(#{projection.startTime},#{time})")
@@ -55,5 +67,7 @@ public interface ProjectionsMapper {
 
     @Select("select id, startTime, endTime, date, id_movie as idMovie, id_hall as idHall from projections " +
             "where id = #{id}")
-    Projections findSpecific(Projections projection);
+    Projections findSpecific(Integer id);
+
+
 }

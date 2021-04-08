@@ -5,29 +5,23 @@ import com.example.Cinema.validator.ValidIdMovie;
 import com.example.Cinema.validator.ValidTime;
 
 import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-
-public class Projections {
+public class ProjectionsUpdate {
 
     private Integer id;
-    @NotNull
     @ValidIdMovie
     private Integer idMovie;
-    @NotNull
     @ValidIdHall
     private Integer idHall;
-    @NotNull
     @FutureOrPresent
     private LocalDate date;
-    @NotNull
     @ValidTime
     private LocalTime startTime;
     private LocalTime endTime;
 
-    public Projections() {
+    public ProjectionsUpdate() {
     }
 
     public Integer getId() {

@@ -2,6 +2,7 @@ package com.example.Cinema.service;
 
 import com.example.Cinema.mapper.MoviesMapper;
 import com.example.Cinema.model.Projections;
+import com.example.Cinema.model.ProjectionsUpdate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;

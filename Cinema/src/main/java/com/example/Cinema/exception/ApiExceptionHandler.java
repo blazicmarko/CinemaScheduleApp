@@ -3,16 +3,12 @@ package com.example.Cinema.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.ValidationException;
 import java.net.ConnectException;
-import java.sql.SQLException;
 import java.time.ZonedDateTime;
 
 @ControllerAdvice
@@ -135,4 +131,6 @@ public class ApiExceptionHandler {
         );
         return new ResponseEntity<>(apiException, badRequest);
     }
+
+
 }

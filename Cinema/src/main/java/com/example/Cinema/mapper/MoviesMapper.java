@@ -2,6 +2,7 @@ package com.example.Cinema.mapper;
 
 import com.example.Cinema.model.Movies;
 import com.example.Cinema.model.Projections;
+import com.example.Cinema.model.ProjectionsUpdate;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
