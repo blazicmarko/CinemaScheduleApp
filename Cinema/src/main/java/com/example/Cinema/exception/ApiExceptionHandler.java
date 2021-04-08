@@ -25,39 +25,6 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(apiException, badRequest);
     }
 
-    @ExceptionHandler(value = {NoMovieException.class})
-    public ResponseEntity<Object> handleNoMovieException(NoMovieException e){
-        HttpStatus badRequest = HttpStatus.NOT_FOUND;
-        ApiException apiException = new ApiException(
-                e.getMessage(),
-                HttpStatus.NOT_FOUND,
-                ZonedDateTime.now()
-        );
-        return new ResponseEntity<>(apiException, badRequest);
-    }
-
-    @ExceptionHandler(value = {NoHallException.class})
-    public ResponseEntity<Object> handleNoHallException(NoHallException e){
-        HttpStatus badRequest = HttpStatus.NOT_FOUND;
-        ApiException apiException = new ApiException(
-                e.getMessage(),
-                HttpStatus.NOT_FOUND,
-                ZonedDateTime.now()
-        );
-        return new ResponseEntity<>(apiException, badRequest);
-    }
-
-    @ExceptionHandler(value = {NullVariableException.class})
-    public ResponseEntity<Object> handleNullVariableException(NullVariableException e){
-        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ApiException apiException = new ApiException(
-                e.getMessage(),
-                HttpStatus.BAD_REQUEST,
-                ZonedDateTime.now()
-        );
-        return new ResponseEntity<>(apiException, badRequest);
-    }
-
     @ExceptionHandler(value = {IdExistsException.class})
     public ResponseEntity<Object> handleIdExistsException(IdExistsException e){
         HttpStatus badRequest = HttpStatus.CONFLICT;

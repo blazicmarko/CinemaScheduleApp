@@ -2,6 +2,7 @@ package com.example.Cinema.resource;
 
 import com.example.Cinema.exception.ApiException;
 import com.example.Cinema.exception.ApiExceptionHandler;
+import com.example.Cinema.exception.ApiHappyEnd;
 import com.example.Cinema.model.Filter;
 import com.example.Cinema.model.ProjectionView;
 import com.example.Cinema.model.Projections;
@@ -59,22 +60,22 @@ public class ProjectionsResource {
 
     public static ResponseEntity<Object> handleUpdateInProjections() {
         HttpStatus inserted = HttpStatus.ACCEPTED;
-        ApiException apiException = new ApiException(
+        ApiHappyEnd apiHappyEnd = new ApiHappyEnd(
                 "The projection is updated in table projections.",
                 HttpStatus.ACCEPTED,
                 ZonedDateTime.now()
         );
-        return new ResponseEntity<>(apiException, inserted);
+        return new ResponseEntity<>(apiHappyEnd, inserted);
     }
 
     public static ResponseEntity<Object> handleInsertInProjections(){
         HttpStatus inserted = HttpStatus.CREATED;
-        ApiException apiException = new ApiException(
+        ApiHappyEnd apiHappyEnd = new ApiHappyEnd(
                 "The projection is inserted into table projections.",
                 HttpStatus.CREATED,
                 ZonedDateTime.now()
         );
-        return new ResponseEntity<>(apiException, inserted);
+        return new ResponseEntity<>(apiHappyEnd, inserted);
 
     }
 }
