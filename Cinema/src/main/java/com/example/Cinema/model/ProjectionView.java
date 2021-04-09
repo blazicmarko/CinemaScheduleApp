@@ -9,6 +9,11 @@ public class ProjectionView {
     private Time time;
     private String hallName;
 
+    public ProjectionView(String movieName, String hallName) {
+        this.movieName = movieName;
+        this.hallName = hallName;
+    }
+
     public String getHallName() {
         return hallName;
     }

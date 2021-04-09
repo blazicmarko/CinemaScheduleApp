@@ -1,7 +1,5 @@
 package com.example.Cinema.resource;
 
-import com.example.Cinema.exception.ApiException;
-import com.example.Cinema.exception.ApiExceptionHandler;
 import com.example.Cinema.exception.ApiHappyEnd;
 import com.example.Cinema.model.Filter;
 import com.example.Cinema.model.ProjectionView;

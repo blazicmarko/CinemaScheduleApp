@@ -6,31 +6,25 @@ import com.example.Cinema.validator.ValidTime;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 
-public class Movies {
+public class MoviesUpdate {
 
     private Integer id;
-    @NotNull
     @ValidMovieName
     private String name;
-    @NotNull
     @Min(value = 1)
     @Max(value = 10)
     private Double grade;
-    @NotNull
     @Min(value = 1900)
     @Max(value = 2021)
     private Integer year;
-    @NotNull
     @ValidIdGenre
     private Integer idGenre;
-    @NotNull
     @ValidTime
     private LocalTime time;
 
-    public Movies(){
+    public MoviesUpdate(){
 
     }
 

@@ -98,6 +98,15 @@ public class ApiExceptionHandler {
         );
         return new ResponseEntity<>(apiException, badRequest);
     }
-
+    @ExceptionHandler(value ={WrongGenreNameException.class})
+    public ResponseEntity<Object> handleWrongGenreException(WrongGenreNameException e){
+        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
+        ApiException apiException = new ApiException(
+                e.getMessage(),
+                HttpStatus.BAD_REQUEST,
+                ZonedDateTime.now()
+        );
+        return new ResponseEntity<>(apiException, badRequest);
+    }
 
 }

@@ -1,12 +1,17 @@
 package com.example.Cinema.model;
 
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
+import java.time.LocalDate;
 
 public class Filter {
     @NotNull
     private String movieName;
-    private Date date;
+    private LocalDate date;
+
+    public Filter(@NotNull String movieName, LocalDate date) {
+        this.movieName = movieName;
+        this.date = date;
+    }
 
     public String getMovieName() {
         return movieName;
@@ -16,11 +21,11 @@ public class Filter {
         this.movieName = movieName;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 }

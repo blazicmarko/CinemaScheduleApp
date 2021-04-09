@@ -13,4 +13,15 @@ import java.util.List;
 public interface GenresMapper {
     @Select("select * from genres")
     List<Genres> findAll();
+
+    @Select("select id " +
+            "from genres " +
+            "order by id DESC " +
+            "limit 1")
+    int getLastId();
+
+    @Select("select id " +
+            "from genres " +
+            "where name like '%${genre}%' ")
+    Integer getIdByName(String genre);
 }

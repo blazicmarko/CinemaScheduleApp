@@ -1,6 +1,8 @@
 package com.example.Cinema.service;
 
-import com.example.Cinema.exception.*;
+import com.example.Cinema.exception.AppointmentCheckException;
+import com.example.Cinema.exception.NoIdException;
+import com.example.Cinema.exception.TableEmptyException;
 import com.example.Cinema.mapper.ProjectionsMapper;
 import com.example.Cinema.model.Filter;
 import com.example.Cinema.model.ProjectionView;

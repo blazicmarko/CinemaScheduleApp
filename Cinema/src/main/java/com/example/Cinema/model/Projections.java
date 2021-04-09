@@ -27,6 +27,22 @@ public class Projections {
     private LocalTime startTime;
     private LocalTime endTime;
 
+    public Projections(Integer id, @NotNull Integer idMovie, @NotNull Integer idHall, @NotNull @FutureOrPresent LocalDate date,
+                       @NotNull LocalTime startTime, LocalTime endTime) {
+        this.id = id;
+        this.idMovie = idMovie;
+        this.idHall = idHall;
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public Projections(Integer id, @NotNull Integer idMovie, @NotNull Integer idHall) {
+        this.id = id;
+        this.idMovie = idMovie;
+        this.idHall = idHall;
+    }
+
     public Projections() {
     }
 
