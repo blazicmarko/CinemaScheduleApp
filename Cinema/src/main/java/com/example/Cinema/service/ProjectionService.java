@@ -40,7 +40,8 @@ public class ProjectionService {
         if (numOfProjections == 0) {
             projectionsMapper.insert(projection);
         } else {
-            throw new AppointmentCheckException("This appointment is full. Choose another one!");
+            String message = getListOfFreeHalls(projection);
+            throw new AppointmentCheckException(message);
         }
     }
 
@@ -82,14 +83,15 @@ public class ProjectionService {
         LocalTime movieTime = moviesService.findTime(oldProjection);
         LocalTime time = projectionsMapper.getEndTime(oldProjection, movieTime);
         oldProjection.setEndTime(time);
-        Integer numOfProjections;
-        numOfProjections = projectionsMapper.isFreeToUpdate(oldProjection);
-        if (numOfProjections == 0) {
+        final Integer[] numOfProjections = new Integer[1];
+        numOfProjections[0] = projectionsMapper.isFreeToUpdate(oldProjection);
+        if (numOfProjections[0] == 0) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
             updateVars.put("endTime", oldProjection.getEndTime().format(dtf));
             projectionsMapper.update(updateVars , projection.getId());
         } else {
-            throw new AppointmentCheckException("This appointment is full. Choose another one!");
+            String message = getListOfFreeHalls(oldProjection);
+            throw new AppointmentCheckException(message);
         }
     }
 
@@ -106,5 +108,25 @@ public class ProjectionService {
         }
         else
             return list;
+    }
+
+    public String getListOfFreeHalls(Projections projection){
+        final Integer[] numOfProjections = {1};
+        Integer idCinema = hallsService.findCinemaOfHall(projection);
+        List<Integer> listIdHalls;
+        Map<Integer, String> halls= new HashMap<>();
+        listIdHalls = hallsService.findAllHalls(idCinema);
+        listIdHalls.forEach((temp) -> {
+            projection.setIdHall(temp);
+            numOfProjections[0] =projectionsMapper.isFreeToInsert(projection);
+            if(numOfProjections[0] == 0){
+                halls.put(temp,hallsService.getName(temp));
+            }
+        });
+        String message = "This appointment is full. Choose available halls :";
+        for(Map.Entry<Integer,String> entry : halls.entrySet()){
+            message=message.concat(entry.getValue() + " ");
+        }
+        return message;
     }
 }

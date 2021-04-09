@@ -3,13 +3,10 @@ package com.example.Cinema.mapper;
 import com.example.Cinema.model.Filter;
 import com.example.Cinema.model.ProjectionView;
 import com.example.Cinema.model.Projections;
-import com.example.Cinema.model.ProjectionsUpdate;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
-import java.sql.Time;
 import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -77,6 +74,7 @@ public interface ProjectionsMapper {
     @Select("select id, startTime, endTime, date, id_movie as idMovie, id_hall as idHall from projections " +
             "where id = #{id}")
     Projections findSpecific(Integer id);
+
 
 
 }
