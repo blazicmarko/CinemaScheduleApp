@@ -43,23 +43,35 @@ public class ProjectionServiceTest {
     public void getSelectedProjections(){
         Filter filter = new Filter("Matrix", null);
         Filter filter2 = new Filter("Matrix", LocalDate.now());
+
         List<ProjectionView> list = Stream.of(
                 new ProjectionView("Matrix", "Sala 1"),
                 new ProjectionView("Matrix", "Sala 4"),
                 new ProjectionView("Matrix", "Sala 3"),
                 new ProjectionView("Matrix", "Sala 2")
         ).collect(Collectors.toCollection(LinkedList::new));
+
         List<ProjectionView> list2 = Stream.of(
                 new ProjectionView("Matrix", "Sala 1"),
                 new ProjectionView("Matrix", "Sala 4")
         ).collect(Collectors.toCollection(LinkedList::new));
+
         when(mapper.getSelectedNoDate(filter)).thenReturn(list);
-        Assert.assertEquals(list,service.getSelected(filter));
+
         when(mapper.getSelected(filter2)).thenReturn(list2);
-        Assert.assertEquals(list2,service.getSelected(filter2));
+
         verify(mapper,times(1)).getSelectedNoDate(filter);
+
         verify(mapper,times(0)).getSelectedNoDate(filter2);
+
         verify(mapper,times(1)).getSelected(filter2);
+
         verify(mapper,times(0)).getSelected(filter);
+
+        Assert.assertEquals(list,service.getSelected(filter));
+
+        Assert.assertEquals(list2,service.getSelected(filter2));
+
+
     }
 }

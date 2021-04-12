@@ -11,9 +11,11 @@ import com.example.Cinema.model.ProjectionsUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.ConnectException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +33,7 @@ public class ProjectionService {
         this.hallsService = hallsService;
     }
 
-    public void insert(Projections projection) {
+    public void insert(Projections projection) throws ConnectException {
         LocalTime movieTime = moviesService.findTime(projection);
         LocalTime time = projectionsMapper.getEndTime(projection, movieTime);
         projection.setEndTime(time);
@@ -56,12 +58,17 @@ public class ProjectionService {
 
     public void update(ProjectionsUpdate projection){
         Map<String , String> updateVars = new HashMap<>();
-        Projections oldProjection;
+        Projections oldProjection = new Projections();
+        oldProjection.setId(projection.getId());
         if(projection.getId() != null){
+            if(projectionsMapper.findOne(oldProjection) == 0){
+                throw new NoIdException("There is no inserted that id in table projections");
+            }
+
             oldProjection = projectionsMapper.findSpecific(projection.getId());
         }
         else {
-            throw new NoIdException("There is no inserted id in table projections.");
+            throw new NoIdException("There is no inserted id in your data of projections.");
         }
         if(projection.getDate() != null){
             updateVars.put("date",projection.getDate().toString());
@@ -114,18 +121,18 @@ public class ProjectionService {
         final Integer[] numOfProjections = {1};
         Integer idCinema = hallsService.findCinemaOfHall(projection);
         List<Integer> listIdHalls;
-        Map<Integer, String> halls= new HashMap<>();
+        List<String> halls= new LinkedList<>();
         listIdHalls = hallsService.findAllHalls(idCinema);
         listIdHalls.forEach((temp) -> {
             projection.setIdHall(temp);
             numOfProjections[0] =projectionsMapper.isFreeToInsert(projection);
             if(numOfProjections[0] == 0){
-                halls.put(temp,hallsService.getName(temp));
+                halls.add(hallsService.getName(temp));
             }
         });
         String message = "This appointment is full. Choose available halls :";
-        for(Map.Entry<Integer,String> entry : halls.entrySet()){
-            message=message.concat(entry.getValue() + " ");
+        for (String hall : halls) {
+            message=message.concat(hall + " ");
         }
         return message;
     }

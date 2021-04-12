@@ -13,7 +13,7 @@ public @interface ValidIdHall {
 
     String message() default "{Invalid idHall}";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default { };
 

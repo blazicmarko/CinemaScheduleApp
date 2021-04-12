@@ -3,6 +3,8 @@ package com.example.Cinema.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import javax.validation.ValidationException;
 import java.net.ConnectException;
 import java.time.ZonedDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 @ControllerAdvice
 public class ApiExceptionHandler {
@@ -60,8 +64,17 @@ public class ApiExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleNoArgumentValid(MethodArgumentNotValidException e){
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
+        List<String> details = new LinkedList<>();
+        for(ObjectError error : e.getBindingResult().getAllErrors()) {
+            String fieldErrors = ((FieldError) error).getField();
+            details.add(fieldErrors + " : " +error.getDefaultMessage());
+        }
+        String message = "";
+        for(String d : details){
+            message = message.concat( d+ ", ");
+        }
         ApiException apiException = new ApiException(
-                e.getMessage(),
+                message,
                 HttpStatus.BAD_REQUEST,
                 ZonedDateTime.now()
         );
@@ -70,8 +83,9 @@ public class ApiExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Object> handleNotReadableArgumentValid(HttpMessageNotReadableException e){
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
+
         ApiException apiException = new ApiException(
-                e.getMessage(),
+                ""+e.getRootCause(),
                 HttpStatus.BAD_REQUEST,
                 ZonedDateTime.now()
         );
