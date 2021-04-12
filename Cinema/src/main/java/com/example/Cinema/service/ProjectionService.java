@@ -59,13 +59,11 @@ public class ProjectionService {
 
     public Projections update(ProjectionsUpdate projection){
         Map<String , String> updateVars = new HashMap<>();
-        Projections oldProjection = new Projections();
-        oldProjection.setId(projection.getId());
+        Projections oldProjection;
         if(projection.getId() != null){
-            if(projectionsMapper.findOne(oldProjection) == 0){
+            if(projectionsMapper.findOne(projection.getId()) == 0){
                 throw new NoIdException("There is no inserted that id in table projections");
             }
-
             oldProjection = projectionsMapper.findSpecific(projection.getId());
         }
         else {

@@ -22,6 +22,14 @@ public class ProjectionsUpdate {
     public ProjectionsUpdate() {
     }
 
+    public ProjectionsUpdate(Integer id, Integer idMovie, Integer idHall, @FutureOrPresent(groups = SecondPriorInfo.class) LocalDate date, LocalTime startTime) {
+        this.id = id;
+        this.idMovie = idMovie;
+        this.idHall = idHall;
+        this.date = date;
+        this.startTime = startTime;
+    }
+
     public Integer getId() {
         return id;
     }

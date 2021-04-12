@@ -44,6 +44,10 @@ public class Projections {
     public Projections() {
     }
 
+    public Projections(Integer id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }

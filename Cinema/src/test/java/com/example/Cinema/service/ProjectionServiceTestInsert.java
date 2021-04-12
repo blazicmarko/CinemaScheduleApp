@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.validation.ValidationException;
 import java.net.ConnectException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -50,39 +49,5 @@ public class ProjectionServiceTestInsert {
 
     }
 
-    @Test
-    public void InsertExceptionForDate(){
-        Projections projection = new Projections(1,1,1,LocalDate.of(2021, 1, 8),
-                LocalTime.of(20,0,0),null);
-        when(mapper.insert(projection)).thenThrow(new ValidationException("Wrong date"));
-        Assert.assertThrows(ValidationException.class,() -> service.insert(projection));
-        verify(mapper,times(1)).insert(projection);
-    }
 
-    @Test
-    public void InsertExceptionForTime(){
-        Projections projection = new Projections(1,1,1,LocalDate.of(2021, 5, 8),
-                LocalTime.of(23,0,0),null);
-        when(mapper.insert(projection)).thenThrow(new ValidationException("Wrong time"));
-        Assert.assertThrows(ValidationException.class,() -> service.insert(projection));
-        verify(mapper,times(1)).insert(projection);
-    }
-
-    @Test
-    public void InsertExceptionForIdHall(){
-        Projections projection = new Projections(1,1,0,LocalDate.of(2021, 5, 8),
-                LocalTime.of(20,0,0),null);
-        when(mapper.insert(projection)).thenThrow(new ValidationException("Wrong idHall"));
-        Assert.assertThrows(ValidationException.class,() -> service.insert(projection));
-        verify(mapper,times(1)).insert(projection);
-    }
-
-    @Test
-    public void InsertExceptionForIdMovie(){
-        Projections projection = new Projections(1,0,1,LocalDate.of(2021, 5, 8),
-                LocalTime.of(20,0,0),null);
-        when(mapper.insert(projection)).thenThrow(new ValidationException("Wrong idMovie"));
-        Assert.assertThrows(ValidationException.class,() -> service.insert(projection));
-        verify(mapper,times(1)).insert(projection);
-    }
 }
