@@ -1,8 +1,6 @@
 package com.example.Cinema.model;
 
-import com.example.Cinema.validator.ValidIdHall;
-import com.example.Cinema.validator.ValidIdMovie;
-import com.example.Cinema.validator.ValidTime;
+import com.example.Cinema.validator.*;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
@@ -13,17 +11,17 @@ import java.time.LocalTime;
 public class Projections {
 
     private Integer id;
-    @NotNull
-    @ValidIdMovie
+    @NotNull(groups = FirstPriorInfo.class)
+    @ValidIdMovie(groups = ThirdPriorInfo.class)
     private Integer idMovie;
-    @NotNull
-    @ValidIdHall
+    @NotNull(groups = FirstPriorInfo.class)
+    @ValidIdHall(groups = ThirdPriorInfo.class)
     private Integer idHall;
-    @NotNull
-    @FutureOrPresent
+    @NotNull(groups = FirstPriorInfo.class)
+    @FutureOrPresent(groups = SecondPriorInfo.class)
     private LocalDate date;
-    @NotNull
-    @ValidTime
+    @NotNull(groups = FirstPriorInfo.class)
+    @ValidTime(groups = SecondPriorInfo.class)
     private LocalTime startTime;
     private LocalTime endTime;
 

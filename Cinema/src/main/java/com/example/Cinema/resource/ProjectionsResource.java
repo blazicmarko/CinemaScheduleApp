@@ -6,10 +6,11 @@ import com.example.Cinema.model.ProjectionView;
 import com.example.Cinema.model.Projections;
 import com.example.Cinema.model.ProjectionsUpdate;
 import com.example.Cinema.service.ProjectionService;
+import com.example.Cinema.validator.OrderForCheck;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -37,7 +38,7 @@ public class ProjectionsResource {
     //insert new projection
     @PostMapping("/insert")
     @ResponseBody
-    public ResponseEntity<Object> insert(@RequestBody @Valid Projections projection) throws ConnectException {
+    public ResponseEntity<Object> insert(@RequestBody @Validated(OrderForCheck.class) Projections projection) throws ConnectException {
         projectionService.insert(projection);
         return handleInsertInProjections();
     }
@@ -45,7 +46,7 @@ public class ProjectionsResource {
     //When we update some of variables
     @PutMapping("/update")
     @ResponseBody
-    public ResponseEntity<Object> update(@RequestBody @Valid ProjectionsUpdate projection) throws ConnectException {
+    public ResponseEntity<Object> update(@RequestBody @Validated(OrderForCheck.class) ProjectionsUpdate projection) throws ConnectException {
         projectionService.update(projection);
         return handleUpdateInProjections();
     }
