@@ -11,7 +11,6 @@ import com.example.Cinema.model.ProjectionsUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.net.ConnectException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -33,7 +32,7 @@ public class ProjectionService {
         this.hallsService = hallsService;
     }
 
-    public Projections insert(Projections projection) throws ConnectException {
+    public Projections insert(Projections projection) {
         LocalTime movieTime = moviesService.findTime(projection);
         LocalTime time = projectionsMapper.getEndTime(projection, movieTime);
         projection.setEndTime(time);

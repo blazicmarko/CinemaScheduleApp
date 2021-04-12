@@ -1,65 +1,154 @@
 package com.example.Cinema.resource;
 
-import com.example.Cinema.mapper.ProjectionsMapper;
-import com.example.Cinema.model.Projections;
-import org.junit.Assert;
+import com.example.Cinema.service.ProjectionService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import javax.validation.ValidationException;
-import java.net.ConnectException;
-import java.time.LocalDate;
-import java.time.LocalTime;
-
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@AutoConfigureMockMvc
 public class ProjectionResourceTest {
     @Autowired
     private ProjectionsResource resource;
 
     @MockBean
-    private ProjectionsMapper service;
+    private ProjectionService service;
+
+    @Autowired
+    private MockMvc mvc;
 
     @Test
-    public void InsertExceptionForDate() throws ConnectException {
-        Projections projection = new Projections(1,1,1, LocalDate.of(2021, 1, 8),
-                LocalTime.of(20,0,0),null);
-        when(resource.insert(projection)).thenThrow(new ValidationException("Wrong date"));
-        Assert.assertThrows(ValidationException.class,() -> service.insert(projection));
-        verify(service,times(1)).insert(projection);
+    public void InsertExceptionForInvalidDate() throws Exception {
+        mvc.perform(MockMvcRequestBuilders
+                .post("/rest/projections/insert")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(" {\"date\" :\"2021-04-11\",\n" +
+                        "    \"startTime\" : \"20:40:00\", \n" +
+                        "    \"idHall\" :1,\n" +
+                        "    \"idMovie\" :3}")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is(400))
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value("date : must be a date in the present or in the future, "))
+                .andReturn();
     }
 
     @Test
-    public void InsertExceptionForTime() throws ConnectException {
-        Projections projection = new Projections(1,1,1,LocalDate.of(2021, 5, 8),
-                LocalTime.of(23,0,0),null);
-        when(resource.insert(projection)).thenThrow(new ValidationException("Wrong time"));
-        Assert.assertThrows(ValidationException.class,() -> service.insert(projection));
-        verify(service,times(1)).insert(projection);
+    public void InsertExceptionForInvalidTime() throws Exception {
+        mvc.perform(MockMvcRequestBuilders
+                .post("/rest/projections/insert")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(" {\"date\" :\"2060-04-11\",\n" +
+                        "    \"startTime\" : \"23:40:00\", \n" +
+                        "    \"idHall\" :1,\n" +
+                        "    \"idMovie\" :3}")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is(400))
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value("startTime : {Invalid timestamp}, "))
+                .andReturn();
     }
 
     @Test
-    public void InsertExceptionForIdHall() throws ConnectException {
-        Projections projection = new Projections(1,1,0,LocalDate.of(2021, 5, 8),
-                LocalTime.of(20,0,0),null);
-        when(resource.insert(projection)).thenThrow(new ValidationException("Wrong idHall"));
-        Assert.assertThrows(ValidationException.class,() -> service.insert(projection));
-        verify(service,times(1)).insert(projection);
+    public void InsertExceptionForInvalidIdHall() throws Exception {
+        mvc.perform(MockMvcRequestBuilders
+                .post("/rest/projections/insert")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(" {\"date\" :\"2060-04-11\",\n" +
+                        "    \"startTime\" : \"20:40:00\", \n" +
+                        "    \"idHall\" :0,\n" +
+                        "    \"idMovie\" :3}")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is(400))
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value("idHall : {Invalid idHall}, "))
+                .andReturn();
     }
 
     @Test
-    public void InsertExceptionForIdMovie() throws ConnectException {
-        Projections projection = new Projections(1,0,1,LocalDate.of(2021, 5, 8),
-                LocalTime.of(20,0,0),null);
-        when(resource.insert(projection)).thenThrow(new ValidationException("Wrong idMovie"));
-        Assert.assertThrows(ValidationException.class,() -> service.insert(projection));
-        verify(service,times(1)).insert(projection);
+    public void InsertExceptionForInvalidIdMovie() throws Exception {
+        mvc.perform(MockMvcRequestBuilders
+                .post("/rest/projections/insert")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(" {\"date\" :\"2060-04-11\",\n" +
+                        "    \"startTime\" : \"20:40:00\", \n" +
+                        "    \"idHall\" :1,\n" +
+                        "    \"idMovie\" :0}")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is(400))
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value("idMovie : {Invalid idMovie}, "))
+                .andReturn();
+    }
+
+    @Test
+    public void InsertExceptionForNullDate() throws Exception {
+        mvc.perform(MockMvcRequestBuilders
+                .post("/rest/projections/insert")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("    {\"startTime\" : \"20:40:00\", \n" +
+                        "    \"idHall\" :1,\n" +
+                        "    \"idMovie\" :0}")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is(400))
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value("date : must not be null, "))
+                .andReturn();
+    }
+
+    @Test
+    public void InsertExceptionForNullTime() throws Exception {
+        mvc.perform(MockMvcRequestBuilders
+                .post("/rest/projections/insert")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(" {\"date\" :\"2060-04-11\",\n" +
+                        "    \"idHall\" :1,\n" +
+                        "    \"idMovie\" :1}")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is(400))
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value("startTime : must not be null, "))
+                .andReturn();
+    }
+
+    @Test
+    public void InsertExceptionForNullIdHall() throws Exception {
+        mvc.perform(MockMvcRequestBuilders
+                .post("/rest/projections/insert")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(" {\"date\" :\"2060-04-11\",\n" +
+                        "    \"startTime\" : \"23:40:00\", \n" +
+                        "    \"idMovie\" :3}")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is(400))
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value("idHall : must not be null, "))
+                .andReturn();
+    }
+
+    @Test
+    public void InsertExceptionForNullIdMovie() throws Exception {
+        mvc.perform(MockMvcRequestBuilders
+                .post("/rest/projections/insert")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(" {\"date\" :\"2060-04-11\",\n" +
+                        "    \"startTime\" : \"20:40:00\", \n" +
+                        "    \"idHall\" :1")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().is(400))
+                .andReturn();
     }
 }

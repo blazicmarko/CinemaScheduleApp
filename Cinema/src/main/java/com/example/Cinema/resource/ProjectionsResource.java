@@ -38,7 +38,7 @@ public class ProjectionsResource {
     //insert new projection
     @PostMapping("/insert")
     @ResponseBody
-    public ResponseEntity<Object> insert(@RequestBody @Validated(OrderForCheck.class) Projections projection) throws ConnectException {
+    public ResponseEntity<Object> insert(@RequestBody @Validated(OrderForCheck.class) Projections projection){
         projectionService.insert(projection);
         return handleInsertInProjections();
     }
@@ -46,14 +46,14 @@ public class ProjectionsResource {
     //When we update some of variables
     @PutMapping("/update")
     @ResponseBody
-    public ResponseEntity<Object> update(@RequestBody @Validated(OrderForCheck.class) ProjectionsUpdate projection) throws ConnectException {
+    public ResponseEntity<Object> update(@RequestBody @Validated(OrderForCheck.class) ProjectionsUpdate projection){
         projectionService.update(projection);
         return handleUpdateInProjections();
     }
 
     //filter projections by movie name and optionally date
     @GetMapping("/filter")
-    public List<ProjectionView> getSelected(@RequestBody @Valid Filter filter) throws ConnectException {
+    public List<ProjectionView> getSelected(@RequestBody @Valid Filter filter){
         return projectionService.getSelected(filter);
     }
 
