@@ -33,7 +33,7 @@ public class ProjectionService {
         this.hallsService = hallsService;
     }
 
-    public void insert(Projections projection) throws ConnectException {
+    public Projections insert(Projections projection) throws ConnectException {
         LocalTime movieTime = moviesService.findTime(projection);
         LocalTime time = projectionsMapper.getEndTime(projection, movieTime);
         projection.setEndTime(time);
@@ -41,6 +41,7 @@ public class ProjectionService {
         numOfProjections = projectionsMapper.isFreeToInsert(projection);
         if (numOfProjections == 0) {
             projectionsMapper.insert(projection);
+            return projection;
         } else {
             String message = getListOfFreeHalls(projection);
             throw new AppointmentCheckException(message);
@@ -56,7 +57,7 @@ public class ProjectionService {
             return list;
     }
 
-    public void update(ProjectionsUpdate projection){
+    public Projections update(ProjectionsUpdate projection){
         Map<String , String> updateVars = new HashMap<>();
         Projections oldProjection = new Projections();
         oldProjection.setId(projection.getId());
@@ -96,6 +97,7 @@ public class ProjectionService {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
             updateVars.put("endTime", oldProjection.getEndTime().format(dtf));
             projectionsMapper.update(updateVars , projection.getId());
+            return oldProjection;
         } else {
             String message = getListOfFreeHalls(oldProjection);
             throw new AppointmentCheckException(message);
