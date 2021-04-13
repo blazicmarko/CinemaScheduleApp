@@ -100,7 +100,7 @@ public class ProjectionResourceTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("    {\"startTime\" : \"20:40:00\", \n" +
                         "    \"idHall\" :1,\n" +
-                        "    \"idMovie\" :0}")
+                        "    \"idMovie\" :1}")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(400))
@@ -129,7 +129,7 @@ public class ProjectionResourceTest {
                 .post("/rest/projections/insert")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(" {\"date\" :\"2060-04-11\",\n" +
-                        "    \"startTime\" : \"23:40:00\", \n" +
+                        "    \"startTime\" : \"20:40:00\", \n" +
                         "    \"idMovie\" :3}")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())

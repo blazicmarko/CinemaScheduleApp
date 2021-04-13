@@ -1,5 +1,6 @@
 package com.example.Cinema.model;
 
+import com.example.Cinema.validator.SecondPriorInfo;
 import com.example.Cinema.validator.ValidIdHall;
 import com.example.Cinema.validator.ValidIdMovie;
 import com.example.Cinema.validator.ValidTime;
