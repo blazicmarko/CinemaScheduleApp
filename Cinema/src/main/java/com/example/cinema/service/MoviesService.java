@@ -67,10 +67,6 @@ public class MoviesService {
         return vars;
     }
 
-    public boolean checkMovieName(String value) {
-        List<String> list = InitService.getMovieNames();
-        return !list.contains(value);
-    }
 
     public List<MovieDB> getByName(String name) {
         return moviesMapper.getByName(name);

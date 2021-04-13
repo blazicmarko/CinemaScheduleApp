@@ -1,12 +1,10 @@
 package com.example.cinema.validator;
 
-import com.example.cinema.service.HallsService;
+import com.example.cinema.service.InitService;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.mockito.Mockito.when;
@@ -17,13 +15,6 @@ public class IdHallDBValidatorTest {
 
     IdHallValidator hallValidator;
 
-    @MockBean
-    HallsService hallsService;
-
-    @Before
-    public void initMock() {
-        hallValidator = new IdHallValidator(hallsService);
-    }
 
     @Test
     public void isValidNull(){
@@ -32,13 +23,13 @@ public class IdHallDBValidatorTest {
 
     @Test
     public void isValidRightData(){
-        when(hallsService.getLastId()).thenReturn(10);
-        Assert.assertTrue(hallValidator.isValid(1,null));
+        when(InitService.getHallLastId()).thenReturn(10);
+        Assert.assertTrue(hallValidator.isValid(1, null));
     }
 
     @Test
     public void isValidOutOfBound(){
-        when(hallsService.getLastId()).thenReturn(10);
-        Assert.assertFalse(hallValidator.isValid(11,null));
+        when(InitService.getHallLastId()).thenReturn(10);
+        Assert.assertFalse(hallValidator.isValid(11, null));
     }
 }

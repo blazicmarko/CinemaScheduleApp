@@ -31,7 +31,6 @@ public class MovieDBNameValidatorTest {
 
     @Test
     public void isValidOutOfBound(){
-
         Assert.assertFalse(movieNameValidator.isValid("Matrix 2",null));
     }
 }

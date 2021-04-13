@@ -1,20 +1,14 @@
 package com.example.cinema.validator;
 
 
-import com.example.cinema.service.MoviesService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.cinema.service.InitService;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class IdMovieValidator implements ConstraintValidator<ValidIdMovie, Integer> {
     private String format;
-    private MoviesService moviesService;
 
-    @Autowired
-    public IdMovieValidator(MoviesService moviesService) {
-        this.moviesService = moviesService;
-    }
 
     @Override
     public void initialize(ValidIdMovie  validIdMovie ) {
@@ -27,6 +21,6 @@ public class IdMovieValidator implements ConstraintValidator<ValidIdMovie, Integ
         }
         if(value <= 0)
             return false;
-        return value <= moviesService.getLastId();
+        return value <= InitService.getMovieLastId();
     }
 }
