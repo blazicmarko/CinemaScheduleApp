@@ -11,7 +11,6 @@ import com.example.Cinema.model.ProjectionsUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.net.ConnectException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -33,7 +32,7 @@ public class ProjectionService {
         this.hallsService = hallsService;
     }
 
-    public void insert(Projections projection) throws ConnectException {
+    public Projections insert(Projections projection) {
         LocalTime movieTime = moviesService.findTime(projection);
         LocalTime time = projectionsMapper.getEndTime(projection, movieTime);
         projection.setEndTime(time);
@@ -41,6 +40,7 @@ public class ProjectionService {
         numOfProjections = projectionsMapper.isFreeToInsert(projection);
         if (numOfProjections == 0) {
             projectionsMapper.insert(projection);
+            return projection;
         } else {
             String message = getListOfFreeHalls(projection);
             throw new AppointmentCheckException(message);
@@ -56,15 +56,13 @@ public class ProjectionService {
             return list;
     }
 
-    public void update(ProjectionsUpdate projection){
+    public Projections update(ProjectionsUpdate projection){
         Map<String , String> updateVars = new HashMap<>();
-        Projections oldProjection = new Projections();
-        oldProjection.setId(projection.getId());
+        Projections oldProjection;
         if(projection.getId() != null){
-            if(projectionsMapper.findOne(oldProjection) == 0){
+            if(projectionsMapper.findOne(projection.getId()) == 0){
                 throw new NoIdException("There is no inserted that id in table projections");
             }
-
             oldProjection = projectionsMapper.findSpecific(projection.getId());
         }
         else {
@@ -96,6 +94,7 @@ public class ProjectionService {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
             updateVars.put("endTime", oldProjection.getEndTime().format(dtf));
             projectionsMapper.update(updateVars , projection.getId());
+            return oldProjection;
         } else {
             String message = getListOfFreeHalls(oldProjection);
             throw new AppointmentCheckException(message);
