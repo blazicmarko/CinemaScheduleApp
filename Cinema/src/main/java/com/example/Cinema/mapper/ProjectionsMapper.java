@@ -15,14 +15,14 @@ import java.util.Map;
 public interface ProjectionsMapper {
 
     @Select("select count(*) from projections where id = #{id}")
-    int findOne(Projections projection);
+    int findOne(Integer id);
 
     @Select("select id, startTime, endTime, date, id_movie as idMovie, id_hall as idHall from projections")
     List<Projections> findAll();
 
     @Insert("insert into projections(date, startTime, endTime, id_hall, id_movie)"+
             "values (#{date}, #{startTime}, #{endTime}, #{idHall}, #{idMovie})")
-    void insert(Projections projection);
+    Boolean insert(Projections projection);
 
 
     @Update({
@@ -34,7 +34,7 @@ public interface ProjectionsMapper {
             "where id = #{id}",
             "</script>"
     })
-    void update(@Param("vars")Map<String,String> vars, @Param("id")Integer id);
+    Boolean update(@Param("vars")Map<String,String> vars, @Param("id")Integer id);
 
     @Select("select m.name as movieName , p.date as date , p.startTime as time, h.name as hallName " +
             "from projections as p " +
