@@ -18,25 +18,31 @@ public class MoviesService {
 
     private MoviesMapper moviesMapper;
     private GenreService genreService;
+    private InitService initService;
 
     @Autowired
-    public MoviesService(MoviesMapper moviesMapper, GenreService genreService) {
+    public MoviesService(MoviesMapper moviesMapper, GenreService genreService, InitService initService) {
         this.moviesMapper = moviesMapper;
         this.genreService = genreService;
+        this.initService = initService;
     }
+
 
     public LocalTime findTime(Projections projection) {
         return moviesMapper.findTime(projection);
     }
 
     public Integer getLastId() {
-        return moviesMapper.getLastId();
+        return InitService.getMovieLastId();
     }
 
     public List<Movies> findAll() { return  moviesMapper.findAll();
     }
 
-    public void insert(Movies movie) { moviesMapper.insert(movie);
+    public void insert(Movies movie) {
+        moviesMapper.insert(movie);
+        InitService.setMovieLastId(moviesMapper.getLastId());
+        InitService.setMovieNames(moviesMapper.getAllNames());
     }
 
     public void update(MoviesUpdate movie) {
@@ -52,10 +58,12 @@ public class MoviesService {
         if(movie.getYear() != null)
             vars.put("year", movie.getYear().toString());
         moviesMapper.update(vars, movie.getId());
+        InitService.setMovieNames(moviesMapper.getAllNames());
     }
 
     public boolean checkMovieName(String value) {
-        return !moviesMapper.checkMovieName(value);
+        List<String> list =InitService.getMovieNames();
+        return !list.contains(value);
     }
 
     public List<Movies> getByName(String name) {

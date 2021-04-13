@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.ConnectException;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -20,33 +19,33 @@ public class MoviesResource {
     private MoviesService moviesService;
 
     @Autowired
-    public MoviesResource(MoviesService moviesService)throws ConnectException {
+    public MoviesResource(MoviesService moviesService){
         this.moviesService = moviesService;
     }
 
     @GetMapping("/all")
-    public List<Movies> getAll()throws ConnectException {
+    public List<Movies> getAll(){
         return moviesService.findAll();
     }
 
     @GetMapping("/findMovieByName")
-    public List<Movies> getByName(@RequestBody String name)throws ConnectException {
+    public List<Movies> getByName(@RequestBody String name){
         return moviesService.getByName(name);
     }
 
     @GetMapping("/findMoviesByGenre")
-    public List<Movies> getByGenre(@RequestBody String genre)throws ConnectException {
+    public List<Movies> getByGenre(@RequestBody String genre){
         return moviesService.getByGenre(genre);
     }
 
     @PostMapping("/insert")
-    public ResponseEntity<Object> insert(@RequestBody @Valid Movies movie)throws ConnectException{
+    public ResponseEntity<Object> insert(@RequestBody @Valid Movies movie){
         moviesService.insert(movie);
         return handleInsertInMovies();
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody @Valid MoviesUpdate movie)throws ConnectException{
+    public ResponseEntity<Object> update(@RequestBody @Valid MoviesUpdate movie){
         moviesService.update(movie);
         return handleUpdateInMovies();
     }
@@ -71,4 +70,5 @@ public class MoviesResource {
         return new ResponseEntity<>(apiHappyEnd, inserted);
 
     }
+
 }

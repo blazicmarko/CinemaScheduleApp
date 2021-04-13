@@ -1,6 +1,6 @@
 package com.example.Cinema.validator;
 
-import com.example.Cinema.service.GenreService;
+import com.example.Cinema.service.MoviesService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,35 +13,27 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class IdGenreValidatorTest {
-
-
-    IdGenreValidator genreValidator;
-
+public class MovieNameValidatorTest {
+    MovieNameValidator movieNameValidator;
 
     @MockBean
-    GenreService genresService;
-
+    MoviesService moviesService;
 
     @Before
     public void initMock(){
-        genreValidator = new IdGenreValidator(genresService);
+        movieNameValidator = new MovieNameValidator(moviesService);
     }
 
-    @Test
-    public void isValidNull(){
-        Assert.assertTrue(genreValidator.isValid(null, null));
-    }
 
     @Test
     public void isValidRightData(){
-        when(genresService.getLastId()).thenReturn(10);
-        Assert.assertTrue(genreValidator.isValid(1,null));
+        when(moviesService.checkMovieName("Matrix")).thenReturn(true);
+        Assert.assertTrue(movieNameValidator.isValid("Matrix",null));
     }
 
     @Test
     public void isValidOutOfBound(){
-        when(genresService.getLastId()).thenReturn(10);
-        Assert.assertFalse(genreValidator.isValid(11,null));
+        when(moviesService.checkMovieName("Matrix 2")).thenReturn(false);
+        Assert.assertFalse(movieNameValidator.isValid("Matrix 2",null));
     }
 }
