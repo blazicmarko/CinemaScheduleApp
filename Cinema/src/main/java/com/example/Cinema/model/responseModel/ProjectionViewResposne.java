@@ -1,15 +1,15 @@
-package com.example.Cinema.model;
+package com.example.Cinema.model.responseModel;
 
 import java.sql.Date;
 import java.sql.Time;
 
-public class ProjectionView {
+public class ProjectionViewResposne {
     private String movieName;
     private Date date;
     private Time time;
     private String hallName;
 
-    public ProjectionView(String movieName, String hallName) {
+    public ProjectionViewResposne(String movieName, String hallName) {
         this.movieName = movieName;
         this.hallName = hallName;
     }

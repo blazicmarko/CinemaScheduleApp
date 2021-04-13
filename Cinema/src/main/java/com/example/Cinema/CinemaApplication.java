@@ -1,21 +1,20 @@
 package com.example.Cinema;
 
-import com.example.Cinema.model.Movies;
+import com.example.Cinema.model.dbModel.MovieDB;
 import org.apache.ibatis.type.MappedTypes;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-	@MappedTypes(Movies.class)
-	@MapperScan("com.example.Cinema.mapper")
-	@SpringBootApplication
-	public class CinemaApplication {
+@MappedTypes(MovieDB.class)
+@MapperScan("com.example.Cinema.mapper")
+@SpringBootApplication
+public class CinemaApplication {
 
 
+    public static void main(String[] args) {
 
-		public static void main(String[] args) {
-
-		SpringApplication.run(CinemaApplication.class, args);
-	}
+        SpringApplication.run(CinemaApplication.class, args);
+    }
 
 }

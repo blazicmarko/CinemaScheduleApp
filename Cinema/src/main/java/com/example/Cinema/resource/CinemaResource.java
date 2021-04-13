@@ -1,7 +1,7 @@
 package com.example.Cinema.resource;
 
 import com.example.Cinema.mapper.CinemaMapper;
-import com.example.Cinema.model.Cinema;
+import com.example.Cinema.model.dbModel.CinemaDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +21,7 @@ public class CinemaResource {
     }
 
     @GetMapping("/all")
-    public List<Cinema> getAll(){
+    public List<CinemaDB> getAll() {
         return cinemaMapper.findAll();
     }
 }

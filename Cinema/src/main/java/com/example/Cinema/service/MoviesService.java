@@ -2,9 +2,9 @@ package com.example.Cinema.service;
 
 import com.example.Cinema.exception.WrongGenreNameException;
 import com.example.Cinema.mapper.MoviesMapper;
-import com.example.Cinema.model.Movies;
-import com.example.Cinema.model.MoviesUpdate;
-import com.example.Cinema.model.Projections;
+import com.example.Cinema.model.dbModel.MovieDB;
+import com.example.Cinema.model.dbModel.ProjectionDB;
+import com.example.Cinema.model.requestModel.MovieUpdateReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,34 +28,35 @@ public class MoviesService {
     }
 
 
-    public LocalTime findTime(Projections projection) {
-        return moviesMapper.findTime(projection);
+    public LocalTime findTime(ProjectionDB projectionDB) {
+        return moviesMapper.findTime(projectionDB);
     }
 
     public Integer getLastId() {
         return InitService.getMovieLastId();
     }
 
-    public List<Movies> findAll() { return  moviesMapper.findAll();
+    public List<MovieDB> findAll() {
+        return moviesMapper.findAll();
     }
 
-    public void insert(Movies movie) {
-        moviesMapper.insert(movie);
+    public void insert(MovieDB movieDB) {
+        moviesMapper.insert(movieDB);
         InitService.setMovieLastId(moviesMapper.getLastId());
         InitService.setMovieNames(moviesMapper.getAllNames());
     }
 
-    public void update(MoviesUpdate movie) {
+    public void update(MovieUpdateReq movie) {
         Map<String, String> vars = new HashMap<>();
-        if(movie.getName() != null)
+        if (movie.getName() != null)
             vars.put("name", movie.getName());
-        if(movie.getGrade() != null)
+        if (movie.getGrade() != null)
             vars.put("grade", movie.getGrade().toString());
-        if(movie.getIdGenre() != null)
+        if (movie.getIdGenre() != null)
             vars.put("id_genre", movie.getIdGenre().toString());
-        if(movie.getTime() != null)
+        if (movie.getTime() != null)
             vars.put("time", movie.getTime().toString());
-        if(movie.getYear() != null)
+        if (movie.getYear() != null)
             vars.put("year", movie.getYear().toString());
         moviesMapper.update(vars, movie.getId());
         InitService.setMovieNames(moviesMapper.getAllNames());
@@ -66,16 +67,15 @@ public class MoviesService {
         return !list.contains(value);
     }
 
-    public List<Movies> getByName(String name) {
+    public List<MovieDB> getByName(String name) {
         return moviesMapper.getByName(name);
     }
 
-    public List<Movies> getByGenre(String genre) {
+    public List<MovieDB> getByGenre(String genre) {
         Integer idGenre = genreService.getGenreIdByName(genre);
-        if(idGenre == null) {
+        if (idGenre == null) {
             throw new WrongGenreNameException("There is no genre with that name!");
-        }
-        else
+        } else
             return moviesMapper.getByGenre(idGenre);
     }
 }

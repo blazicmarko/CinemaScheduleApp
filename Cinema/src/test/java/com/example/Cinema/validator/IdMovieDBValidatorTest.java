@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class IdMovieValidatorTest {
+public class IdMovieDBValidatorTest {
 
     IdMovieValidator idMovieValidator;
 
@@ -21,7 +21,7 @@ public class IdMovieValidatorTest {
     MoviesService moviesService;
 
     @Before
-    public void initMock(){
+    public void initMock() {
         idMovieValidator = new IdMovieValidator(moviesService);
     }
 

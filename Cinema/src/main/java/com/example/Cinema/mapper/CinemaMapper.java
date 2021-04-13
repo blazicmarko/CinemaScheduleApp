@@ -1,6 +1,6 @@
 package com.example.Cinema.mapper;
 
-import com.example.Cinema.model.Cinema;
+import com.example.Cinema.model.dbModel.CinemaDB;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
@@ -11,5 +11,5 @@ import java.util.List;
 @Mapper
 public interface CinemaMapper {
     @Select("select * from cinema")
-    List<Cinema> findAll();
+    List<CinemaDB> findAll();
 }

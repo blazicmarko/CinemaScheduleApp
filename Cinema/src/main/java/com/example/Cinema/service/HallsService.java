@@ -1,7 +1,7 @@
 package com.example.Cinema.service;
 
 import com.example.Cinema.mapper.HallsMapper;
-import com.example.Cinema.model.Projections;
+import com.example.Cinema.model.dbModel.ProjectionDB;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,12 +15,12 @@ public class HallsService {
         this.hallsMapper = hallsMapper;
     }
 
-    public Integer getLastId(){
+    public Integer getLastId() {
         return InitService.getHallLastId();
     }
 
-    public Integer findCinemaOfHall(Projections projections){
-        return hallsMapper.findCinemaOfHall(projections);
+    public Integer findCinemaOfHall(ProjectionDB projectionDB) {
+        return hallsMapper.findCinemaOfHall(projectionDB);
     }
 
     public List<Integer> findAllHalls(Integer idCinema) {

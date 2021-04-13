@@ -4,10 +4,10 @@ import com.example.Cinema.exception.AppointmentCheckException;
 import com.example.Cinema.exception.NoIdException;
 import com.example.Cinema.exception.TableEmptyException;
 import com.example.Cinema.mapper.ProjectionsMapper;
-import com.example.Cinema.model.Filter;
-import com.example.Cinema.model.ProjectionView;
-import com.example.Cinema.model.Projections;
-import com.example.Cinema.model.ProjectionsUpdate;
+import com.example.Cinema.model.dbModel.FilterDB;
+import com.example.Cinema.model.dbModel.ProjectionDB;
+import com.example.Cinema.model.requestModel.ProjectionUpdateReq;
+import com.example.Cinema.model.responseModel.ProjectionViewResposne;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,100 +32,96 @@ public class ProjectionService {
         this.hallsService = hallsService;
     }
 
-    public Projections insert(Projections projection) {
-        LocalTime movieTime = moviesService.findTime(projection);
-        LocalTime time = projectionsMapper.getEndTime(projection, movieTime);
-        projection.setEndTime(time);
+    public ProjectionDB insert(ProjectionDB projectionDB) {
+        LocalTime movieTime = moviesService.findTime(projectionDB);
+        LocalTime time = projectionsMapper.getEndTime(projectionDB, movieTime);
+        projectionDB.setEndTime(time);
         Integer numOfProjections;
-        numOfProjections = projectionsMapper.isFreeToInsert(projection);
+        numOfProjections = projectionsMapper.isFreeToInsert(projectionDB);
         if (numOfProjections == 0) {
-            projectionsMapper.insert(projection);
-            return projection;
+            projectionsMapper.insert(projectionDB);
+            return projectionDB;
         } else {
-            String message = getListOfFreeHalls(projection);
+            String message = getListOfFreeHalls(projectionDB);
             throw new AppointmentCheckException(message);
         }
     }
 
-    public List<Projections> getAll(){
-        List<Projections> list = projectionsMapper.findAll();
-        if(list.isEmpty()){
+    public List<ProjectionDB> getAll() {
+        List<ProjectionDB> list = projectionsMapper.findAll();
+        if (list.isEmpty()) {
             throw new TableEmptyException("Table projections is empty");
-        }
-        else
+        } else
             return list;
     }
 
-    public Projections update(ProjectionsUpdate projection){
-        Map<String , String> updateVars = new HashMap<>();
-        Projections oldProjection;
-        if(projection.getId() != null){
-            if(projectionsMapper.findOne(projection.getId()) == 0){
+    public ProjectionDB update(ProjectionUpdateReq projection) {
+        Map<String, String> updateVars = new HashMap<>();
+        ProjectionDB oldProjectionDB;
+        if (projection.getId() != null) {
+            if (projectionsMapper.findOne(projection.getId()) == 0) {
                 throw new NoIdException("There is no inserted that id in table projections");
             }
-            oldProjection = projectionsMapper.findSpecific(projection.getId());
-        }
-        else {
+            oldProjectionDB = projectionsMapper.findSpecific(projection.getId());
+        } else {
             throw new NoIdException("There is no inserted id in your data of projections.");
         }
-        if(projection.getDate() != null){
-            updateVars.put("date",projection.getDate().toString());
-            oldProjection.setDate(projection.getDate());
+        if (projection.getDate() != null) {
+            updateVars.put("date", projection.getDate().toString());
+            oldProjectionDB.setDate(projection.getDate());
         }
-        if(projection.getStartTime() != null){
-            updateVars.put("startTime",projection.getStartTime().toString());
-            oldProjection.setStartTime(projection.getStartTime());
+        if (projection.getStartTime() != null) {
+            updateVars.put("startTime", projection.getStartTime().toString());
+            oldProjectionDB.setStartTime(projection.getStartTime());
         }
-        if(projection.getIdHall() != null){
-            updateVars.put("id_hall",projection.getIdHall().toString());
-            oldProjection.setIdHall(projection.getIdHall());
+        if (projection.getIdHall() != null) {
+            updateVars.put("id_hall", projection.getIdHall().toString());
+            oldProjectionDB.setIdHall(projection.getIdHall());
         }
-        if(projection.getIdMovie() != null){
-            updateVars.put("id_movie",projection.getIdMovie().toString());
-            oldProjection.setIdMovie(projection.getIdMovie());
+        if (projection.getIdMovie() != null) {
+            updateVars.put("id_movie", projection.getIdMovie().toString());
+            oldProjectionDB.setIdMovie(projection.getIdMovie());
         }
 
-        LocalTime movieTime = moviesService.findTime(oldProjection);
-        LocalTime time = projectionsMapper.getEndTime(oldProjection, movieTime);
-        oldProjection.setEndTime(time);
+        LocalTime movieTime = moviesService.findTime(oldProjectionDB);
+        LocalTime time = projectionsMapper.getEndTime(oldProjectionDB, movieTime);
+        oldProjectionDB.setEndTime(time);
         final Integer[] numOfProjections = new Integer[1];
-        numOfProjections[0] = projectionsMapper.isFreeToUpdate(oldProjection);
+        numOfProjections[0] = projectionsMapper.isFreeToUpdate(oldProjectionDB);
         if (numOfProjections[0] == 0) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-            updateVars.put("endTime", oldProjection.getEndTime().format(dtf));
-            projectionsMapper.update(updateVars , projection.getId());
-            return oldProjection;
+            updateVars.put("endTime", oldProjectionDB.getEndTime().format(dtf));
+            projectionsMapper.update(updateVars, projection.getId());
+            return oldProjectionDB;
         } else {
-            String message = getListOfFreeHalls(oldProjection);
+            String message = getListOfFreeHalls(oldProjectionDB);
             throw new AppointmentCheckException(message);
         }
     }
 
-    public List<ProjectionView> getSelected(Filter filter){
-        List<ProjectionView> list;
-        if(filter.getDate() != null){
-            list = projectionsMapper.getSelected(filter);
+    public List<ProjectionViewResposne> getSelected(FilterDB filterDB) {
+        List<ProjectionViewResposne> list;
+        if (filterDB.getDate() != null) {
+            list = projectionsMapper.getSelected(filterDB);
+        } else {
+            list = projectionsMapper.getSelectedNoDate(filterDB);
         }
-        else{
-            list = projectionsMapper.getSelectedNoDate(filter);
-        }
-        if(list.isEmpty()){
+        if (list.isEmpty()) {
             throw new TableEmptyException("Table projections is empty");
-        }
-        else
+        } else
             return list;
     }
 
-    public String getListOfFreeHalls(Projections projection){
+    public String getListOfFreeHalls(ProjectionDB projectionDB) {
         final Integer[] numOfProjections = {1};
-        Integer idCinema = hallsService.findCinemaOfHall(projection);
+        Integer idCinema = hallsService.findCinemaOfHall(projectionDB);
         List<Integer> listIdHalls;
-        List<String> halls= new LinkedList<>();
+        List<String> halls = new LinkedList<>();
         listIdHalls = hallsService.findAllHalls(idCinema);
         listIdHalls.forEach((temp) -> {
-            projection.setIdHall(temp);
-            numOfProjections[0] =projectionsMapper.isFreeToInsert(projection);
-            if(numOfProjections[0] == 0){
+            projectionDB.setIdHall(temp);
+            numOfProjections[0] = projectionsMapper.isFreeToInsert(projectionDB);
+            if (numOfProjections[0] == 0) {
                 halls.add(hallsService.getName(temp));
             }
         });

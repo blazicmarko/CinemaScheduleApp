@@ -1,64 +1,33 @@
-package com.example.Cinema.model;
+package com.example.Cinema.model.requestModel;
 
-import com.example.Cinema.validator.ValidIdHall;
-import com.example.Cinema.validator.ValidIdMovie;
-import com.example.Cinema.validator.ValidTime;
+import com.example.Cinema.validator.*;
 
-import javax.validation.Valid;
 import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Valid
-public class Projections {
+public class ProjectionUpdateReq {
 
     private Integer id;
-    @NotNull
-    @ValidIdMovie
+    @ValidIdMovie(groups = RequestValidationSequence.class)
     private Integer idMovie;
-    @NotNull
-    @ValidIdHall
+    @ValidIdHall(groups = RequestValidationSequence.class)
     private Integer idHall;
-    @NotNull
-    @FutureOrPresent
+    @FutureOrPresent(groups = RequestValidationSequence.class)
     private LocalDate date;
-    @NotNull
-    @ValidTime
+    @ValidTime(groups = ThirdPriorInfo.class)
     private LocalTime startTime;
     private LocalTime endTime;
 
+    public ProjectionUpdateReq() {
+    }
 
-    public Projections(Integer id, @NotNull Integer idMovie, @NotNull Integer idHall, @NotNull @FutureOrPresent LocalDate date,
-                       @NotNull LocalTime startTime, LocalTime endTime) {
+    public ProjectionUpdateReq(Integer id, Integer idMovie, Integer idHall, @FutureOrPresent(groups = RequestValidationSequence.class) LocalDate date, LocalTime startTime) {
         this.id = id;
         this.idMovie = idMovie;
         this.idHall = idHall;
         this.date = date;
         this.startTime = startTime;
-        this.endTime = endTime;
-    }
-
-    public Projections(Integer id, @NotNull Integer idMovie, @NotNull Integer idHall) {
-        this.id = id;
-        this.idMovie = idMovie;
-        this.idHall = idHall;
-    }
-
-
-    public Projections() {
-    }
-
-    public Projections(Integer id) {
-        this.id = id;
-    }
-
-    public Projections(@Valid Projections projections){
-        this.id = projections.getId();
-        this.date = projections.getDate();
-        this.startTime = projections.getStartTime();
-        this.idHall = projections.getIdHall();
-        this.idMovie = projections.getIdMovie();
     }
 
     public Integer getId() {

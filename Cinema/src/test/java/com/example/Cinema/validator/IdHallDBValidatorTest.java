@@ -1,6 +1,6 @@
 package com.example.Cinema.validator;
 
-import com.example.Cinema.service.GenreService;
+import com.example.Cinema.service.HallsService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,35 +13,32 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class IdGenreValidatorTest {
+public class IdHallDBValidatorTest {
 
-
-    IdGenreValidator genreValidator;
-
+    IdHallValidator hallValidator;
 
     @MockBean
-    GenreService genresService;
-
+    HallsService hallsService;
 
     @Before
-    public void initMock(){
-        genreValidator = new IdGenreValidator(genresService);
+    public void initMock() {
+        hallValidator = new IdHallValidator(hallsService);
     }
 
     @Test
     public void isValidNull(){
-        Assert.assertTrue(genreValidator.isValid(null, null));
+        Assert.assertTrue(hallValidator.isValid(null, null));
     }
 
     @Test
     public void isValidRightData(){
-        when(genresService.getLastId()).thenReturn(10);
-        Assert.assertTrue(genreValidator.isValid(1,null));
+        when(hallsService.getLastId()).thenReturn(10);
+        Assert.assertTrue(hallValidator.isValid(1,null));
     }
 
     @Test
     public void isValidOutOfBound(){
-        when(genresService.getLastId()).thenReturn(10);
-        Assert.assertFalse(genreValidator.isValid(11,null));
+        when(hallsService.getLastId()).thenReturn(10);
+        Assert.assertFalse(hallValidator.isValid(11,null));
     }
 }

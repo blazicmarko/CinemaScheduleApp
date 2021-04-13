@@ -1,8 +1,9 @@
 package com.example.Cinema.mapper;
 
-import com.example.Cinema.model.Filter;
-import com.example.Cinema.model.ProjectionView;
-import com.example.Cinema.model.Projections;
+import com.example.Cinema.model.dbModel.FilterDB;
+import com.example.Cinema.model.dbModel.ProjectionDB;
+import com.example.Cinema.model.responseModel.ProjectionViewResposne;
+import com.example.Cinema.queryStrings.ProjectionQuery;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
@@ -14,67 +15,36 @@ import java.util.Map;
 @Mapper
 public interface ProjectionsMapper {
 
-    @Select("select count(*) from projections where id = #{id}")
+    @Select(ProjectionQuery.FIND_ONE)
     int findOne(Integer id);
 
-    @Select("select id, startTime, endTime, date, id_movie as idMovie, id_hall as idHall from projections")
-    List<Projections> findAll();
+    @Select(ProjectionQuery.FIND_ALL)
+    List<ProjectionDB> findAll();
 
-    @Insert("insert into projections(date, startTime, endTime, id_hall, id_movie)"+
-            "values (#{date}, #{startTime}, #{endTime}, #{idHall}, #{idMovie})")
-    Boolean insert(Projections projection);
-
-
-    @Update({
-            "<script>",
-            "update projections set",
-            "<foreach item = 'item' index = 'index' collection = 'vars' separator =','>",
-            "${index} = #{item}",
-            "</foreach>",
-            "where id = #{id}",
-            "</script>"
-    })
-    Boolean update(@Param("vars")Map<String,String> vars, @Param("id")Integer id);
-
-    @Select("select m.name as movieName , p.date as date , p.startTime as time, h.name as hallName " +
-            "from projections as p " +
-            "inner join movies as m on p.id_movie = m.id " +
-            "inner join halls as h on p.id_hall = h.id " +
-            "where m.name = #{movieName} and p.date = #{date}")
-    List<ProjectionView> getSelected(Filter filter);
-
-    @Select("select m.name as movieName , p.date as date , p.startTime as time, h.name as hallName " +
-            "from projections as p " +
-            "inner join movies as m on p.id_movie = m.id " +
-            "inner join halls as h on p.id_hall = h.id " +
-            "where m.name = #{movieName}")
-    List<ProjectionView> getSelectedNoDate(Filter filter);
-
-    @Select("select count(*) " +
-            "from projections as p " +
-            "where p.date = #{date} " +
-            "and p.id_hall = #{idHall} " +
-            "and (p.startTime between #{startTime} and #{endTime} " +
-            "or p.endTime between #{startTime} and #{endTime})")
-    Integer isFreeToInsert(Projections projection);
-
-    @Select("select count(*) " +
-            "from projections as p " +
-            "where p.date = #{date} " +
-            "and p.id_hall = #{idHall} " +
-            "and p.id != #{id} " +
-            "and (p.startTime between #{startTime} and #{endTime} " +
-            "or p.endTime between #{startTime} and #{endTime})")
-    Integer isFreeToUpdate(Projections projection);
+    @Insert(ProjectionQuery.INSERT)
+    Boolean insert(ProjectionDB projectionDB);
 
 
-    @Select("select addtime(#{projection.startTime},#{time})")
-    LocalTime getEndTime(Projections projection, LocalTime time);
+    @Update(ProjectionQuery.UPDATE)
+    Boolean update(@Param("vars") Map<String, String> vars, @Param("id") Integer id);
 
-    @Select("select id, startTime, endTime, date, id_movie as idMovie, id_hall as idHall from projections " +
-            "where id = #{id}")
-    Projections findSpecific(Integer id);
+    @Select(ProjectionQuery.GET_SELECTED)
+    List<ProjectionViewResposne> getSelected(FilterDB filterDB);
 
+    @Select(ProjectionQuery.GET_SELECTED_NO_DATE)
+    List<ProjectionViewResposne> getSelectedNoDate(FilterDB filterDB);
+
+    @Select(ProjectionQuery.IS_FREE_TO_ISNERT)
+    Integer isFreeToInsert(ProjectionDB projectionDB);
+
+    @Select(ProjectionQuery.IS_FREE_TO_UPDATE)
+    Integer isFreeToUpdate(ProjectionDB projectionDB);
+
+    @Select(ProjectionQuery.GET_END_TIME)
+    LocalTime getEndTime(ProjectionDB projectionDB, LocalTime time);
+
+    @Select(ProjectionQuery.FIND_SPECIFIC)
+    ProjectionDB findSpecific(Integer id);
 
 
 }

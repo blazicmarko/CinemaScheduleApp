@@ -1,7 +1,7 @@
 package com.example.Cinema.resource;
 
 import com.example.Cinema.mapper.GenresMapper;
-import com.example.Cinema.model.Genres;
+import com.example.Cinema.model.dbModel.GenreDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +20,7 @@ public class GenresResource {
     }
 
     @GetMapping("/all")
-    public List<Genres> getAll(){
+    public List<GenreDB> getAll() {
         return genresMapper.findAll();
     }
 }

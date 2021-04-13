@@ -1,7 +1,7 @@
 package com.example.Cinema.mapper;
 
-import com.example.Cinema.model.Movies;
-import com.example.Cinema.model.Projections;
+import com.example.Cinema.model.dbModel.MovieDB;
+import com.example.Cinema.model.dbModel.ProjectionDB;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +14,11 @@ import java.util.Map;
 public interface MoviesMapper {
 
     @Select("select * from movies")
-    List<Movies> findAll();
+    List<MovieDB> findAll();
 
-    @Insert("insert into movies(name,year,grade,id_genre,time)"+
+    @Insert("insert into movies(name,year,grade,id_genre,time)" +
             "values (#{name}, #{year}, #{grade}, #{idGenre}, #{time})")
-    void insert(Movies movie);
+    void insert(MovieDB movieDB);
 
     @Update({
             "<script>",
@@ -33,7 +33,7 @@ public interface MoviesMapper {
 
     @Select("select time from movies " +
             "where id = #{idMovie}")
-    LocalTime findTime(Projections projection);
+    LocalTime findTime(ProjectionDB projectionDB);
 
     @Select("select count(*) from movies where id = #{idMovie}")
     Integer findMovie(Integer idMovie);
@@ -52,12 +52,12 @@ public interface MoviesMapper {
     @Select("select * " +
             "from movies " +
             "where name like '%${name}%' ")
-    List<Movies> getByName(String name);
+    List<MovieDB> getByName(String name);
 
     @Select("select * " +
             "from movies " +
             "where id_genre = #{idGenre} ")
-    List<Movies> getByGenre(int idGenre);
+    List<MovieDB> getByGenre(int idGenre);
 
     @Select("select name " +
             "from movies")

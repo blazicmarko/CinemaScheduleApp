@@ -1,8 +1,10 @@
-package com.example.Cinema.model;
+package com.example.Cinema.model.dbModel;
 
-public class Genres {
+
+public class CinemaDB {
     private Integer id;
     private String name;
+    private String addres;
 
     public Integer getId() {
         return id;
@@ -18,5 +20,13 @@ public class Genres {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAddres() {
+        return addres;
+    }
+
+    public void setAddres(String addres) {
+        this.addres = addres;
     }
 }

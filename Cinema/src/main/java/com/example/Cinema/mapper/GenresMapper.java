@@ -1,7 +1,7 @@
 package com.example.Cinema.mapper;
 
 
-import com.example.Cinema.model.Genres;
+import com.example.Cinema.model.dbModel.GenreDB;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import java.util.List;
 @Mapper
 public interface GenresMapper {
     @Select("select * from genres")
-    List<Genres> findAll();
+    List<GenreDB> findAll();
 
     @Select("select id " +
             "from genres " +

@@ -1,10 +1,10 @@
 package com.example.Cinema.resource;
 
-import com.example.Cinema.exception.ApiHappyEnd;
-import com.example.Cinema.model.Filter;
-import com.example.Cinema.model.ProjectionView;
-import com.example.Cinema.model.Projections;
-import com.example.Cinema.model.ProjectionsUpdate;
+import com.example.Cinema.model.dbModel.FilterDB;
+import com.example.Cinema.model.dbModel.ProjectionDB;
+import com.example.Cinema.model.requestModel.ProjectionUpdateReq;
+import com.example.Cinema.model.responseModel.ApiResponseModel;
+import com.example.Cinema.model.responseModel.ProjectionViewResposne;
 import com.example.Cinema.service.ProjectionService;
 import com.example.Cinema.validator.OrderForCheck;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.ConnectException;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -29,52 +28,53 @@ public class ProjectionsResource {
         this.projectionService = projectionService;
     }
 
+    public static ResponseEntity<Object> handleUpdateInProjections() {
+        HttpStatus inserted = HttpStatus.ACCEPTED;
+        ApiResponseModel apiResponseModel = new ApiResponseModel(
+                "The projection is updated in table projections.",
+                HttpStatus.ACCEPTED,
+                ZonedDateTime.now()
+        );
+        return new ResponseEntity<>(apiResponseModel, inserted);
+    }
+
+    public static ResponseEntity<Object> handleInsertInProjections() {
+        HttpStatus inserted = HttpStatus.CREATED;
+        ApiResponseModel apiResponseModel = new ApiResponseModel(
+                "The projection is inserted into table projections.",
+                HttpStatus.CREATED,
+                ZonedDateTime.now()
+        );
+        return new ResponseEntity<>(apiResponseModel, inserted);
+
+    }
+
     //get all projections
     @GetMapping("/all")
-    public List<Projections> getAll() throws ConnectException {
+    public List<ProjectionDB> getAll() {
         return projectionService.getAll();
 
     }
+
     //insert new projection
     @PostMapping("/insert")
     @ResponseBody
-    public ResponseEntity<Object> insert(@RequestBody @Validated(OrderForCheck.class) Projections projection){
-        projectionService.insert(projection);
+    public ResponseEntity<Object> insert(@RequestBody @Validated(OrderForCheck.class) ProjectionDB projectionDB) {
+        projectionService.insert(projectionDB);
         return handleInsertInProjections();
     }
 
     //When we update some of variables
     @PutMapping("/update")
     @ResponseBody
-    public ResponseEntity<Object> update(@RequestBody @Validated(OrderForCheck.class) ProjectionsUpdate projection){
+    public ResponseEntity<Object> update(@RequestBody @Validated(OrderForCheck.class) ProjectionUpdateReq projection) {
         projectionService.update(projection);
         return handleUpdateInProjections();
     }
 
     //filter projections by movie name and optionally date
     @GetMapping("/filter")
-    public List<ProjectionView> getSelected(@RequestBody @Valid Filter filter){
-        return projectionService.getSelected(filter);
-    }
-
-    public static ResponseEntity<Object> handleUpdateInProjections() {
-        HttpStatus inserted = HttpStatus.ACCEPTED;
-        ApiHappyEnd apiHappyEnd = new ApiHappyEnd(
-                "The projection is updated in table projections.",
-                HttpStatus.ACCEPTED,
-                ZonedDateTime.now()
-        );
-        return new ResponseEntity<>(apiHappyEnd, inserted);
-    }
-
-    public static ResponseEntity<Object> handleInsertInProjections(){
-        HttpStatus inserted = HttpStatus.CREATED;
-        ApiHappyEnd apiHappyEnd = new ApiHappyEnd(
-                "The projection is inserted into table projections.",
-                HttpStatus.CREATED,
-                ZonedDateTime.now()
-        );
-        return new ResponseEntity<>(apiHappyEnd, inserted);
-
+    public List<ProjectionViewResposne> getSelected(@RequestBody @Valid FilterDB filterDB) {
+        return projectionService.getSelected(filterDB);
     }
 }

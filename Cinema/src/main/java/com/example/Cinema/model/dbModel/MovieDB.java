@@ -1,30 +1,34 @@
-package com.example.Cinema.model;
+package com.example.Cinema.model.dbModel;
 
-import com.example.Cinema.validator.ValidIdGenre;
-import com.example.Cinema.validator.ValidMovieName;
-import com.example.Cinema.validator.ValidTime;
+import com.example.Cinema.validator.*;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 
-public class MoviesUpdate {
+public class MovieDB {
 
     private Integer id;
-    @ValidMovieName
+    @NotNull(groups = FirstPriorInfo.class)
+    @ValidMovieName(groups = ThirdPriorInfo.class)
     private String name;
-    @Min(value = 1)
-    @Max(value = 10)
+    @NotNull(groups = FirstPriorInfo.class)
+    @Min(value = 1, groups = RequestValidationSequence.class)
+    @Max(value = 10, groups = RequestValidationSequence.class)
     private Double grade;
-    @Min(value = 1900)
-    @Max(value = 2021)
+    @NotNull(groups = FirstPriorInfo.class)
+    @Min(value = 1900, groups = RequestValidationSequence.class)
+    @Max(value = 2021, groups = RequestValidationSequence.class)
     private Integer year;
-    @ValidIdGenre
+    @NotNull(groups = FirstPriorInfo.class)
+    @ValidIdGenre(groups = RequestValidationSequence.class)
     private Integer idGenre;
-    @ValidTime
+    @NotNull(groups = FirstPriorInfo.class)
+    @ValidTime(groups = ThirdPriorInfo.class)
     private LocalTime time;
 
-    public MoviesUpdate(){
+    public MovieDB() {
 
     }
 

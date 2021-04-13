@@ -1,6 +1,6 @@
-package com.example.Cinema.model;
+package com.example.Cinema.model.dbModel;
 
-public class Halls {
+public class HallDB {
     private Integer id;
     private String name;
     private Integer idCinema;

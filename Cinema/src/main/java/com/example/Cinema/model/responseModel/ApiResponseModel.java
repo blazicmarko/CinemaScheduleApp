@@ -1,15 +1,15 @@
-package com.example.Cinema.exception;
+package com.example.Cinema.model.responseModel;
 
 import org.springframework.http.HttpStatus;
 
 import java.time.ZonedDateTime;
 
-public class ApiException {
+public class ApiResponseModel {
     private final String message;
     private final HttpStatus httpStatus;
     private final ZonedDateTime timestamp;
 
-    public ApiException(String message, HttpStatus httpStatus, ZonedDateTime timestamp) {
+    public ApiResponseModel(String message, HttpStatus httpStatus, ZonedDateTime timestamp) {
         this.message = message;
         this.httpStatus = httpStatus;
         this.timestamp = timestamp;
