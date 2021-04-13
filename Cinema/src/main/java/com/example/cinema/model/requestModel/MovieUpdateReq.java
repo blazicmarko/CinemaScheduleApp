@@ -1,6 +1,10 @@
 package com.example.cinema.model.requestModel;
 
-import com.example.cinema.validator.*;
+import com.example.cinema.validator.ValidIdGenre;
+import com.example.cinema.validator.ValidMovieName;
+import com.example.cinema.validator.ValidTime;
+import com.example.cinema.validator.groups.SecondPriorGroup;
+import com.example.cinema.validator.groups.ThirdPriorGroup;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -9,17 +13,17 @@ import java.time.LocalTime;
 public class MovieUpdateReq {
 
     private Integer id;
-    @ValidMovieName(groups = ThirdPriorInfo.class)
+    @ValidMovieName(groups = ThirdPriorGroup.class)
     private String name;
-    @Min(value = 1, groups = RequestValidationSequence.class)
-    @Max(value = 10, groups = RequestValidationSequence.class)
+    @Min(value = 1, groups = SecondPriorGroup.class)
+    @Max(value = 10, groups = SecondPriorGroup.class)
     private Double grade;
-    @Min(value = 1900, groups = RequestValidationSequence.class)
-    @Max(value = 2021, groups = RequestValidationSequence.class)
+    @Min(value = 1900, groups = SecondPriorGroup.class)
+    @Max(value = 2021, groups = SecondPriorGroup.class)
     private Integer year;
-    @ValidIdGenre(groups = RequestValidationSequence.class)
+    @ValidIdGenre(groups = SecondPriorGroup.class)
     private Integer idGenre;
-    @ValidTime(groups = ThirdPriorInfo.class)
+    @ValidTime(groups = ThirdPriorGroup.class)
     private LocalTime time;
 
     public MovieUpdateReq() {

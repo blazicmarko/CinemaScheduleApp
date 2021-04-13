@@ -1,6 +1,11 @@
 package com.example.cinema.model.dbModel;
 
-import com.example.cinema.validator.*;
+import com.example.cinema.validator.ValidIdHall;
+import com.example.cinema.validator.ValidIdMovie;
+import com.example.cinema.validator.ValidTime;
+import com.example.cinema.validator.groups.FirstPriorGroup;
+import com.example.cinema.validator.groups.SecondPriorGroup;
+import com.example.cinema.validator.groups.ThirdPriorGroup;
 
 import javax.validation.Valid;
 import javax.validation.constraints.FutureOrPresent;
@@ -12,17 +17,17 @@ import java.time.LocalTime;
 public class ProjectionDB {
 
     private Integer id;
-    @NotNull(groups = FirstPriorInfo.class)
-    @ValidIdMovie(groups = RequestValidationSequence.class)
+    @NotNull(groups = FirstPriorGroup.class)
+    @ValidIdMovie(groups = SecondPriorGroup.class)
     private Integer idMovie;
-    @NotNull(groups = FirstPriorInfo.class)
-    @ValidIdHall(groups = RequestValidationSequence.class)
+    @NotNull(groups = FirstPriorGroup.class)
+    @ValidIdHall(groups = SecondPriorGroup.class)
     private Integer idHall;
-    @NotNull(groups = FirstPriorInfo.class)
-    @FutureOrPresent(groups = RequestValidationSequence.class)
+    @NotNull(groups = FirstPriorGroup.class)
+    @FutureOrPresent(groups = SecondPriorGroup.class)
     private LocalDate date;
-    @NotNull(groups = FirstPriorInfo.class)
-    @ValidTime(groups = ThirdPriorInfo.class)
+    @NotNull(groups = FirstPriorGroup.class)
+    @ValidTime(groups = ThirdPriorGroup.class)
     private LocalTime startTime;
     private LocalTime endTime;
 

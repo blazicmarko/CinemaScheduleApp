@@ -1,6 +1,11 @@
 package com.example.cinema.model.dbModel;
 
-import com.example.cinema.validator.*;
+import com.example.cinema.validator.ValidIdGenre;
+import com.example.cinema.validator.ValidMovieName;
+import com.example.cinema.validator.ValidTime;
+import com.example.cinema.validator.groups.FirstPriorGroup;
+import com.example.cinema.validator.groups.SecondPriorGroup;
+import com.example.cinema.validator.groups.ThirdPriorGroup;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -10,22 +15,22 @@ import java.time.LocalTime;
 public class MovieDB {
 
     private Integer id;
-    @NotNull(groups = FirstPriorInfo.class)
-    @ValidMovieName(groups = ThirdPriorInfo.class)
+    @NotNull(groups = FirstPriorGroup.class)
+    @ValidMovieName(groups = ThirdPriorGroup.class)
     private String name;
-    @NotNull(groups = FirstPriorInfo.class)
-    @Min(value = 1, groups = RequestValidationSequence.class)
-    @Max(value = 10, groups = RequestValidationSequence.class)
+    @NotNull(groups = FirstPriorGroup.class)
+    @Min(value = 1, groups = SecondPriorGroup.class)
+    @Max(value = 10, groups = SecondPriorGroup.class)
     private Double grade;
-    @NotNull(groups = FirstPriorInfo.class)
-    @Min(value = 1900, groups = RequestValidationSequence.class)
-    @Max(value = 2021, groups = RequestValidationSequence.class)
+    @NotNull(groups = FirstPriorGroup.class)
+    @Min(value = 1900, groups = SecondPriorGroup.class)
+    @Max(value = 2021, groups = SecondPriorGroup.class)
     private Integer year;
-    @NotNull(groups = FirstPriorInfo.class)
-    @ValidIdGenre(groups = RequestValidationSequence.class)
+    @NotNull(groups = FirstPriorGroup.class)
+    @ValidIdGenre(groups = SecondPriorGroup.class)
     private Integer idGenre;
-    @NotNull(groups = FirstPriorInfo.class)
-    @ValidTime(groups = ThirdPriorInfo.class)
+    @NotNull(groups = FirstPriorGroup.class)
+    @ValidTime(groups = ThirdPriorGroup.class)
     private LocalTime time;
 
     public MovieDB() {

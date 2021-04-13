@@ -2,7 +2,7 @@ package com.example.cinema.resource;
 
 import com.example.cinema.model.dbModel.MovieDB;
 import com.example.cinema.model.requestModel.MovieUpdateReq;
-import com.example.cinema.model.responseModel.ApiResponseModel;
+import com.example.cinema.model.responseModel.BasicResponse;
 import com.example.cinema.service.MoviesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,22 +25,22 @@ public class MoviesResource {
 
     public static ResponseEntity<Object> handleUpdateInMovies() {
         HttpStatus inserted = HttpStatus.ACCEPTED;
-        ApiResponseModel apiResponseModel = new ApiResponseModel(
+        BasicResponse basicResponse = new BasicResponse(
                 "The movie is updated in table movies.",
                 HttpStatus.ACCEPTED,
                 ZonedDateTime.now()
         );
-        return new ResponseEntity<>(apiResponseModel, inserted);
+        return new ResponseEntity<>(basicResponse, inserted);
     }
 
     public static ResponseEntity<Object> handleInsertInMovies() {
         HttpStatus inserted = HttpStatus.CREATED;
-        ApiResponseModel apiResponseModel = new ApiResponseModel(
+        BasicResponse basicResponse = new BasicResponse(
                 "The movie is inserted into table movies.",
                 HttpStatus.CREATED,
                 ZonedDateTime.now()
         );
-        return new ResponseEntity<>(apiResponseModel, inserted);
+        return new ResponseEntity<>(basicResponse, inserted);
 
     }
 

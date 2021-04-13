@@ -1,6 +1,10 @@
 package com.example.cinema.model.requestModel;
 
-import com.example.cinema.validator.*;
+import com.example.cinema.validator.ValidIdHall;
+import com.example.cinema.validator.ValidIdMovie;
+import com.example.cinema.validator.ValidTime;
+import com.example.cinema.validator.groups.SecondPriorGroup;
+import com.example.cinema.validator.groups.ThirdPriorGroup;
 
 import javax.validation.constraints.FutureOrPresent;
 import java.time.LocalDate;
@@ -9,20 +13,20 @@ import java.time.LocalTime;
 public class ProjectionUpdateReq {
 
     private Integer id;
-    @ValidIdMovie(groups = RequestValidationSequence.class)
+    @ValidIdMovie(groups = SecondPriorGroup.class)
     private Integer idMovie;
-    @ValidIdHall(groups = RequestValidationSequence.class)
+    @ValidIdHall(groups = SecondPriorGroup.class)
     private Integer idHall;
-    @FutureOrPresent(groups = RequestValidationSequence.class)
+    @FutureOrPresent(groups = SecondPriorGroup.class)
     private LocalDate date;
-    @ValidTime(groups = ThirdPriorInfo.class)
+    @ValidTime(groups = ThirdPriorGroup.class)
     private LocalTime startTime;
     private LocalTime endTime;
 
     public ProjectionUpdateReq() {
     }
 
-    public ProjectionUpdateReq(Integer id, Integer idMovie, Integer idHall, @FutureOrPresent(groups = RequestValidationSequence.class) LocalDate date, LocalTime startTime) {
+    public ProjectionUpdateReq(Integer id, Integer idMovie, Integer idHall, @FutureOrPresent(groups = SecondPriorGroup.class) LocalDate date, LocalTime startTime) {
         this.id = id;
         this.idMovie = idMovie;
         this.idHall = idHall;

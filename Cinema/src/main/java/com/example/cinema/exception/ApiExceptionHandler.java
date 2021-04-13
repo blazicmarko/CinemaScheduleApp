@@ -1,6 +1,6 @@
 package com.example.cinema.exception;
 
-import com.example.cinema.model.responseModel.ApiResponseModel;
+import com.example.cinema.model.responseModel.BasicResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -22,45 +22,45 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = {AppointmentCheckException.class})
     public ResponseEntity<Object> handleAppointmentCheckException(AppointmentCheckException e){
         HttpStatus badRequest = HttpStatus.CONFLICT;
-        ApiResponseModel apiResponseModel = new ApiResponseModel(
+        BasicResponse basicResponse = new BasicResponse(
                 e.getMessage(),
                 HttpStatus.CONFLICT,
                 ZonedDateTime.now()
         );
-        return new ResponseEntity<>(apiResponseModel, badRequest);
+        return new ResponseEntity<>(basicResponse, badRequest);
     }
 
     @ExceptionHandler(value = {IdExistsException.class})
     public ResponseEntity<Object> handleIdExistsException(IdExistsException e){
         HttpStatus badRequest = HttpStatus.CONFLICT;
-        ApiResponseModel apiResponseModel = new ApiResponseModel(
+        BasicResponse basicResponse = new BasicResponse(
                 e.getMessage(),
                 HttpStatus.CONFLICT,
                 ZonedDateTime.now()
         );
-        return new ResponseEntity<>(apiResponseModel, badRequest);
+        return new ResponseEntity<>(basicResponse, badRequest);
     }
 
     @ExceptionHandler(value = {NoIdException.class})
     public ResponseEntity<Object> handleNoIdException(NoIdException e){
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ApiResponseModel apiResponseModel = new ApiResponseModel(
+        BasicResponse basicResponse = new BasicResponse(
                 e.getMessage(),
                 HttpStatus.BAD_REQUEST,
                 ZonedDateTime.now()
         );
-        return new ResponseEntity<>(apiResponseModel, badRequest);
+        return new ResponseEntity<>(basicResponse, badRequest);
     }
 
     @ExceptionHandler(value = {TableEmptyException.class})
     public ResponseEntity<Object> handleTableEmptyException(TableEmptyException e){
         HttpStatus badRequest = HttpStatus.NO_CONTENT;
-        ApiResponseModel apiResponseModel = new ApiResponseModel(
+        BasicResponse basicResponse = new BasicResponse(
                 e.getMessage(),
                 HttpStatus.NO_CONTENT,
                 ZonedDateTime.now()
         );
-        return new ResponseEntity<>(apiResponseModel, badRequest);
+        return new ResponseEntity<>(basicResponse, badRequest);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleNoArgumentValid(MethodArgumentNotValidException e){
@@ -74,54 +74,54 @@ public class ApiExceptionHandler {
         for(String d : details){
             message = message.concat( d+ ", ");
         }
-        ApiResponseModel apiResponseModel = new ApiResponseModel(
+        BasicResponse basicResponse = new BasicResponse(
                 message,
                 HttpStatus.BAD_REQUEST,
                 ZonedDateTime.now()
         );
-        return new ResponseEntity<>(apiResponseModel, badRequest);
+        return new ResponseEntity<>(basicResponse, badRequest);
     }
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Object> handleNotReadableArgumentValid(HttpMessageNotReadableException e) {
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
 
-        ApiResponseModel apiResponseModel = new ApiResponseModel(
+        BasicResponse basicResponse = new BasicResponse(
                 "" + e.getRootCause(),
                 HttpStatus.BAD_REQUEST,
                 ZonedDateTime.now()
         );
-        return new ResponseEntity<>(apiResponseModel, badRequest);
+        return new ResponseEntity<>(basicResponse, badRequest);
     }
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<Object> handleNotValid(ValidationException e){
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ApiResponseModel apiResponseModel = new ApiResponseModel(
+        BasicResponse basicResponse = new BasicResponse(
                 e.getMessage(),
                 HttpStatus.BAD_REQUEST,
                 ZonedDateTime.now()
         );
-        return new ResponseEntity<>(apiResponseModel, badRequest);
+        return new ResponseEntity<>(basicResponse, badRequest);
     }
 
     @ExceptionHandler(value ={ConnectException.class})
     public ResponseEntity<Object> handleDatabaseException(ConnectException e){
         HttpStatus badRequest = HttpStatus.INTERNAL_SERVER_ERROR;
-        ApiResponseModel apiResponseModel = new ApiResponseModel(
+        BasicResponse basicResponse = new BasicResponse(
                 "Database is temporary disconnected. Please try again later.",
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 ZonedDateTime.now()
         );
-        return new ResponseEntity<>(apiResponseModel, badRequest);
+        return new ResponseEntity<>(basicResponse, badRequest);
     }
     @ExceptionHandler(value ={WrongGenreNameException.class})
     public ResponseEntity<Object> handleWrongGenreException(WrongGenreNameException e){
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-        ApiResponseModel apiResponseModel = new ApiResponseModel(
+        BasicResponse basicResponse = new BasicResponse(
                 e.getMessage(),
                 HttpStatus.BAD_REQUEST,
                 ZonedDateTime.now()
         );
-        return new ResponseEntity<>(apiResponseModel, badRequest);
+        return new ResponseEntity<>(basicResponse, badRequest);
     }
 
 }

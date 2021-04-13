@@ -3,10 +3,10 @@ package com.example.cinema.resource;
 import com.example.cinema.model.dbModel.FilterDB;
 import com.example.cinema.model.dbModel.ProjectionDB;
 import com.example.cinema.model.requestModel.ProjectionUpdateReq;
-import com.example.cinema.model.responseModel.ApiResponseModel;
+import com.example.cinema.model.responseModel.BasicResponse;
 import com.example.cinema.model.responseModel.ProjectionViewResposne;
 import com.example.cinema.service.ProjectionService;
-import com.example.cinema.validator.OrderForCheck;
+import com.example.cinema.validator.sequences.RequestValidationSequence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,22 +30,22 @@ public class ProjectionsResource {
 
     public static ResponseEntity<Object> handleUpdateInProjections() {
         HttpStatus inserted = HttpStatus.ACCEPTED;
-        ApiResponseModel apiResponseModel = new ApiResponseModel(
+        BasicResponse basicResponse = new BasicResponse(
                 "The projection is updated in table projections.",
                 HttpStatus.ACCEPTED,
                 ZonedDateTime.now()
         );
-        return new ResponseEntity<>(apiResponseModel, inserted);
+        return new ResponseEntity<>(basicResponse, inserted);
     }
 
     public static ResponseEntity<Object> handleInsertInProjections() {
         HttpStatus inserted = HttpStatus.CREATED;
-        ApiResponseModel apiResponseModel = new ApiResponseModel(
+        BasicResponse basicResponse = new BasicResponse(
                 "The projection is inserted into table projections.",
                 HttpStatus.CREATED,
                 ZonedDateTime.now()
         );
-        return new ResponseEntity<>(apiResponseModel, inserted);
+        return new ResponseEntity<>(basicResponse, inserted);
 
     }
 
@@ -59,7 +59,7 @@ public class ProjectionsResource {
     //insert new projection
     @PostMapping("/insert")
     @ResponseBody
-    public ResponseEntity<Object> insert(@RequestBody @Validated(OrderForCheck.class) ProjectionDB projectionDB) {
+    public ResponseEntity<Object> insert(@RequestBody @Validated(RequestValidationSequence.class) ProjectionDB projectionDB) {
         projectionService.insert(projectionDB);
         return handleInsertInProjections();
     }
@@ -67,7 +67,7 @@ public class ProjectionsResource {
     //When we update some of variables
     @PutMapping("/update")
     @ResponseBody
-    public ResponseEntity<Object> update(@RequestBody @Validated(OrderForCheck.class) ProjectionUpdateReq projection) {
+    public ResponseEntity<Object> update(@RequestBody @Validated(RequestValidationSequence.class) ProjectionUpdateReq projection) {
         projectionService.update(projection);
         return handleUpdateInProjections();
     }

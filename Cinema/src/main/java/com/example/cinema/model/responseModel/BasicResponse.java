@@ -4,12 +4,12 @@ import org.springframework.http.HttpStatus;
 
 import java.time.ZonedDateTime;
 
-public class ApiResponseModel {
+public class BasicResponse {
     private final String message;
     private final HttpStatus httpStatus;
     private final ZonedDateTime timestamp;
 
-    public ApiResponseModel(String message, HttpStatus httpStatus, ZonedDateTime timestamp) {
+    public BasicResponse(String message, HttpStatus httpStatus, ZonedDateTime timestamp) {
         this.message = message;
         this.httpStatus = httpStatus;
         this.timestamp = timestamp;
