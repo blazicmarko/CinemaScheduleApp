@@ -55,7 +55,13 @@ public class ProjectionService {
             return list;
     }
 
-    public ProjectionDB update(ProjectionUpdateReq projection) {
+    public boolean update(ProjectionUpdateReq projection) {
+        Map<String, String> updateVars = checkForUpdate(projection);
+        projectionsMapper.update(updateVars, projection.getId());
+        return true;
+    }
+
+    public Map<String, String> checkForUpdate(ProjectionUpdateReq projection) {
         Map<String, String> updateVars = new HashMap<>();
         ProjectionDB oldProjectionDB;
         if (projection.getId() != null) {
@@ -82,21 +88,18 @@ public class ProjectionService {
             updateVars.put("id_movie", projection.getIdMovie().toString());
             oldProjectionDB.setIdMovie(projection.getIdMovie());
         }
-
         LocalTime movieTime = moviesService.findTime(oldProjectionDB);
         LocalTime time = projectionsMapper.getEndTime(oldProjectionDB, movieTime);
         oldProjectionDB.setEndTime(time);
-        final Integer[] numOfProjections = new Integer[1];
-        numOfProjections[0] = projectionsMapper.isFreeToUpdate(oldProjectionDB);
-        if (numOfProjections[0] == 0) {
+        if (projectionsMapper.isFreeToUpdate(oldProjectionDB) == 0) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
             updateVars.put("endTime", oldProjectionDB.getEndTime().format(dtf));
-            projectionsMapper.update(updateVars, projection.getId());
-            return oldProjectionDB;
+            return updateVars;
         } else {
             String message = getListOfFreeHalls(oldProjectionDB);
             throw new AppointmentCheckException(message);
         }
+
     }
 
     public List<ProjectionViewResposne> getSelected(FilterDB filterDB) {

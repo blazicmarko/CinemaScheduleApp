@@ -138,12 +138,7 @@ public class ProjectionDBServiceTest {
         when(mapper.getEndTime(oldProjectionDB, LocalTime.of(2, 30, 0))).thenReturn(LocalTime.of(22, 40, 0));
         when(mapper.isFreeToUpdate(oldProjectionDB)).thenReturn(0);
         when(mapper.update(map, projection.getId())).thenReturn(true);
-        Assert.assertEquals(newProjectionDB.getId(), service.update(projection).getId());
-        Assert.assertEquals(newProjectionDB.getDate(), service.update(projection).getDate());
-        Assert.assertEquals(newProjectionDB.getIdHall(), service.update(projection).getIdHall());
-        Assert.assertEquals(newProjectionDB.getIdMovie(), service.update(projection).getIdMovie());
-        Assert.assertEquals(newProjectionDB.getStartTime(), service.update(projection).getStartTime());
-        Assert.assertEquals(newProjectionDB.getEndTime(), service.update(projection).getEndTime());
+        Assert.assertTrue(service.update(projection));
     }
 
     @Test

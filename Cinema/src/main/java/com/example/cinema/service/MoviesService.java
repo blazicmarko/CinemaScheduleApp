@@ -47,6 +47,12 @@ public class MoviesService {
     }
 
     public void update(MovieUpdateReq movie) {
+        Map<String, String> vars = checkForUpdate(movie);
+        moviesMapper.update(vars, movie.getId());
+        InitService.setMovieNames(moviesMapper.getAllNames());
+    }
+
+    private Map<String, String> checkForUpdate(MovieUpdateReq movie) {
         Map<String, String> vars = new HashMap<>();
         if (movie.getName() != null)
             vars.put("name", movie.getName());
@@ -58,12 +64,11 @@ public class MoviesService {
             vars.put("time", movie.getTime().toString());
         if (movie.getYear() != null)
             vars.put("year", movie.getYear().toString());
-        moviesMapper.update(vars, movie.getId());
-        InitService.setMovieNames(moviesMapper.getAllNames());
+        return vars;
     }
 
     public boolean checkMovieName(String value) {
-        List<String> list =InitService.getMovieNames();
+        List<String> list = InitService.getMovieNames();
         return !list.contains(value);
     }
 
