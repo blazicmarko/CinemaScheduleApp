@@ -19,6 +19,7 @@ private GenreService genreService;
     public void initialize(ValidIdGenre  validIdHall ) {
         format = validIdHall.format(); }
 
+
     @Override
     public boolean isValid(Integer value, ConstraintValidatorContext constraintValidatorContext) {
         if(value == null){
