@@ -41,7 +41,7 @@ public interface ProjectionsMapper {
     Integer isFreeToUpdate(ProjectionDB projectionDB);
 
     @Select(ProjectionQuery.GET_END_TIME)
-    LocalTime getEndTime(ProjectionDB projectionDB, LocalTime time);
+    LocalTime getEndTime(ProjectionDB projection, LocalTime time);
 
     @Select(ProjectionQuery.FIND_SPECIFIC)
     ProjectionDB findSpecific(Integer id);

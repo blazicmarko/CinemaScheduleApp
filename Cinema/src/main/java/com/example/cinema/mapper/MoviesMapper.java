@@ -24,7 +24,7 @@ public interface MoviesMapper {
     void update(@Param("vars") Map<String,String> vars, @Param("id") Integer id);
 
     @Select(MovieQuery.FIND_TIME)
-    LocalTime findTime(ProjectionDB projectionDB);
+    LocalTime findTime(ProjectionDB projection);
 
     @Select(MovieQuery.FIND_MOVIE)
     Integer findMovie(Integer idMovie);

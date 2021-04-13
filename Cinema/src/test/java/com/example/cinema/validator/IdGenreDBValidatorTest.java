@@ -2,21 +2,30 @@ package com.example.cinema.validator;
 
 import com.example.cinema.service.InitService;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@RunWith(SpringRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(fullyQualifiedNames = "com.example.cinema.service.*")
 @SpringBootTest
-@PrepareForTest(InitService.class)
 public class IdGenreDBValidatorTest {
 
 
     IdGenreValidator genreValidator;
+
+    @Before
+    public void initMock() {
+        genreValidator = new IdGenreValidator();
+        mockStatic(InitService.class);
+
+    }
 
     @Test
     public void isValidNull() {

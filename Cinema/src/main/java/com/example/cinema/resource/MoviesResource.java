@@ -4,12 +4,13 @@ import com.example.cinema.model.dbModel.MovieDB;
 import com.example.cinema.model.requestModel.MovieUpdateReq;
 import com.example.cinema.model.responseModel.BasicResponse;
 import com.example.cinema.service.MoviesService;
+import com.example.cinema.validator.sequences.RequestValidationSequence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -60,13 +61,13 @@ public class MoviesResource {
     }
 
     @PostMapping("/insert")
-    public ResponseEntity<Object> insert(@RequestBody @Valid MovieDB movieDB) {
+    public ResponseEntity<Object> insert(@RequestBody @Validated(RequestValidationSequence.class) MovieDB movieDB) {
         moviesService.insert(movieDB);
         return handleInsertInMovies();
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody @Valid MovieUpdateReq movie) {
+    public ResponseEntity<Object> update(@RequestBody @Validated(RequestValidationSequence.class) MovieUpdateReq movie) {
         moviesService.update(movie);
         return handleUpdateInMovies();
     }

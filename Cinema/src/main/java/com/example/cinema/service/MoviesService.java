@@ -28,8 +28,8 @@ public class MoviesService {
     }
 
 
-    public LocalTime findTime(ProjectionDB projectionDB) {
-        return moviesMapper.findTime(projectionDB);
+    public LocalTime findTime(ProjectionDB projection) {
+        return moviesMapper.findTime(projection);
     }
 
     public Integer getLastId() {

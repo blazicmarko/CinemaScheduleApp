@@ -2,27 +2,37 @@ package com.example.cinema.validator;
 
 import com.example.cinema.service.InitService;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@RunWith(SpringRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(fullyQualifiedNames = "com.example.cinema.service.*")
 @SpringBootTest
 public class IdHallDBValidatorTest {
 
     IdHallValidator hallValidator;
 
+    @Before
+    public void initMock() {
+        hallValidator = new IdHallValidator();
+        mockStatic(InitService.class);
+
+    }
 
     @Test
-    public void isValidNull(){
+    public void isValidNull() {
         Assert.assertTrue(hallValidator.isValid(null, null));
     }
 
     @Test
-    public void isValidRightData(){
+    public void isValidRightData() {
         when(InitService.getHallLastId()).thenReturn(10);
         Assert.assertTrue(hallValidator.isValid(1, null));
     }

@@ -52,9 +52,6 @@ public class ProjectionDB {
     public ProjectionDB() {
     }
 
-    public ProjectionDB(Integer id) {
-        this.id = id;
-    }
 
 
     public Integer getId() {

@@ -7,11 +7,13 @@ import com.example.cinema.validator.groups.FirstPriorGroup;
 import com.example.cinema.validator.groups.SecondPriorGroup;
 import com.example.cinema.validator.groups.ThirdPriorGroup;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 
+@Valid
 public class MovieDB {
 
     private Integer id;
