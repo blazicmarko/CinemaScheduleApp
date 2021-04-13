@@ -16,7 +16,7 @@ public class HallsService {
     }
 
     public Integer getLastId(){
-        return hallsMapper.getLastId();
+        return InitService.getHallLastId();
     }
 
     public Integer findCinemaOfHall(Projections projections){

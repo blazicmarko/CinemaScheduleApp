@@ -58,4 +58,8 @@ public interface MoviesMapper {
             "from movies " +
             "where id_genre = #{idGenre} ")
     List<Movies> getByGenre(int idGenre);
+
+    @Select("select name " +
+            "from movies")
+    List<String> getAllNames();
 }
