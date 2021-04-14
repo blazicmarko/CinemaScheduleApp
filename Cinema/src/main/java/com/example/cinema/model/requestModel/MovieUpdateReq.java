@@ -27,7 +27,6 @@ public class MovieUpdateReq {
     private LocalTime time;
 
     public MovieUpdateReq() {
-
     }
 
     public LocalTime getTime() {

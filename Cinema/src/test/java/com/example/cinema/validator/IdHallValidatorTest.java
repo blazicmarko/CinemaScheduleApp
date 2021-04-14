@@ -9,39 +9,37 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(fullyQualifiedNames = "com.example.cinema.service.*")
 @SpringBootTest
-public class MovieDBNameValidatorTest {
+public class IdHallValidatorTest {
 
-    MovieNameValidator movieNameValidator;
-
-    List<String> list;
+    IdHallValidator hallValidator;
 
     @Before
     public void initMock() {
-        movieNameValidator = new MovieNameValidator();
+        hallValidator = new IdHallValidator();
         mockStatic(InitService.class);
-        list = new LinkedList<>();
-        list.add("Matrix 2");
+
     }
 
+    @Test
+    public void isValidNull() {
+        Assert.assertTrue(hallValidator.isValid(null, null));
+    }
 
     @Test
     public void isValidRightData() {
-        when(InitService.getMovieNames()).thenReturn(list);
-        Assert.assertTrue(movieNameValidator.isValid("Matrix", null));
+        when(InitService.getHallLastId()).thenReturn(10);
+        Assert.assertTrue(hallValidator.isValid(1, null));
     }
 
     @Test
-    public void isValidOutOfBound() {
-        when(InitService.getMovieNames()).thenReturn(list);
-        Assert.assertFalse(movieNameValidator.isValid("Matrix 2", null));
+    public void isValidOutOfBound(){
+        when(InitService.getHallLastId()).thenReturn(10);
+        Assert.assertFalse(hallValidator.isValid(11, null));
     }
 }

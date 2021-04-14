@@ -15,7 +15,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(fullyQualifiedNames = "com.example.cinema.service.*")
 @SpringBootTest
-public class IdGenreDBValidatorTest {
+public class IdGenreValidatorTest {
 
 
     IdGenreValidator genreValidator;
@@ -42,5 +42,17 @@ public class IdGenreDBValidatorTest {
     public void isValidOutOfBound() {
         when(InitService.getGenreLastId()).thenReturn(10);
         Assert.assertFalse(genreValidator.isValid(11, null));
+    }
+
+    @Test
+    public void isValidOutOfBoundNull() {
+        when(InitService.getGenreLastId()).thenReturn(10);
+        Assert.assertFalse(genreValidator.isValid(0, null));
+    }
+
+    @Test
+    public void isValidOutOfBoundNegative() {
+        when(InitService.getGenreLastId()).thenReturn(10);
+        Assert.assertFalse(genreValidator.isValid(-5, null));
     }
 }

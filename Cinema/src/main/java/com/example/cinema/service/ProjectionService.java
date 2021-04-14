@@ -4,8 +4,8 @@ import com.example.cinema.exception.AppointmentCheckException;
 import com.example.cinema.exception.NoIdException;
 import com.example.cinema.exception.TableEmptyException;
 import com.example.cinema.mapper.ProjectionsMapper;
-import com.example.cinema.model.dbModel.FilterDB;
 import com.example.cinema.model.dbModel.ProjectionDB;
+import com.example.cinema.model.requestModel.FilterReq;
 import com.example.cinema.model.requestModel.ProjectionUpdateReq;
 import com.example.cinema.model.responseModel.ProjectionViewResposne;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,12 +102,12 @@ public class ProjectionService {
 
     }
 
-    public List<ProjectionViewResposne> getSelected(FilterDB filterDB) {
+    public List<ProjectionViewResposne> getSelected(FilterReq filterReq) {
         List<ProjectionViewResposne> list;
-        if (filterDB.getDate() != null) {
-            list = projectionsMapper.getSelected(filterDB);
+        if (filterReq.getDate() != null) {
+            list = projectionsMapper.getSelected(filterReq);
         } else {
-            list = projectionsMapper.getSelectedNoDate(filterDB);
+            list = projectionsMapper.getSelectedNoDate(filterReq);
         }
         if (list.isEmpty()) {
             throw new TableEmptyException("Table projections is empty");
