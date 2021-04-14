@@ -30,17 +30,6 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(basicResponse, badRequest);
     }
 
-    @ExceptionHandler(value = {IdExistsException.class})
-    public ResponseEntity<Object> handleIdExistsException(IdExistsException e){
-        HttpStatus badRequest = HttpStatus.CONFLICT;
-        BasicResponse basicResponse = new BasicResponse(
-                e.getMessage(),
-                HttpStatus.CONFLICT,
-                ZonedDateTime.now()
-        );
-        return new ResponseEntity<>(basicResponse, badRequest);
-    }
-
     @ExceptionHandler(value = {NoIdException.class})
     public ResponseEntity<Object> handleNoIdException(NoIdException e){
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;

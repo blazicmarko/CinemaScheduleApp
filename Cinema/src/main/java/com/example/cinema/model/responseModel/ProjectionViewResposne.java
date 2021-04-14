@@ -9,9 +9,7 @@ public class ProjectionViewResposne {
     private LocalTime time;
     private String hallName;
 
-    public ProjectionViewResposne(String movieName, String hallName) {
-        this.movieName = movieName;
-        this.hallName = hallName;
+    public ProjectionViewResposne() {
     }
 
     public String getHallName() {

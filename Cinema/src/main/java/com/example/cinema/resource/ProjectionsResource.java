@@ -1,7 +1,7 @@
 package com.example.cinema.resource;
 
-import com.example.cinema.model.dbModel.FilterDB;
 import com.example.cinema.model.dbModel.ProjectionDB;
+import com.example.cinema.model.requestModel.FilterReq;
 import com.example.cinema.model.requestModel.ProjectionUpdateReq;
 import com.example.cinema.model.responseModel.BasicResponse;
 import com.example.cinema.model.responseModel.ProjectionViewResposne;
@@ -88,7 +88,7 @@ public class ProjectionsResource {
 
     //filter projections by movie name and optionally date
     @GetMapping("/filter")
-    public List<ProjectionViewResposne> getSelected(@RequestBody @Valid FilterDB filterDB) {
-        return projectionService.getSelected(filterDB);
+    public List<ProjectionViewResposne> getSelected(@RequestBody @Valid FilterReq filterReq) {
+        return projectionService.getSelected(filterReq);
     }
 }
