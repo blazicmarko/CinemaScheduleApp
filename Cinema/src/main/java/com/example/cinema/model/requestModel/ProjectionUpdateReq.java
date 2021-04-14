@@ -23,6 +23,8 @@ public class ProjectionUpdateReq {
     private LocalTime startTime;
     private LocalTime endTime;
 
+    public ProjectionUpdateReq() {
+    }
 
     public ProjectionUpdateReq(Integer id, Integer idMovie, Integer idHall, @FutureOrPresent(groups = SecondPriorGroup.class) LocalDate date, LocalTime startTime) {
         this.id = id;

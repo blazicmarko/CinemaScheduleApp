@@ -1,6 +1,11 @@
 package com.example.cinema.resource;
 
+import com.example.cinema.model.dbModel.ProjectionDB;
+import com.example.cinema.model.requestModel.FilterReq;
+import com.example.cinema.model.requestModel.ProjectionUpdateReq;
+import com.example.cinema.model.responseModel.ProjectionViewResposne;
 import com.example.cinema.service.ProjectionService;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +18,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDate;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -150,5 +160,41 @@ public class ProjectionDBResourceTest {
                 .andDo(print())
                 .andExpect(status().is(400))
                 .andReturn();
+    }
+
+    @Test
+    public void GetAllRightData() {
+        List<ProjectionDB> list = new LinkedList<>();
+        list.add(new ProjectionDB());
+        when(service.getAll()).thenReturn(list);
+        Assert.assertEquals(resource.getAll(), list);
+    }
+
+    @Test
+    public void InsertRightData() {
+        ProjectionDB projection = new ProjectionDB();
+        when(service.insert(projection)).thenReturn(projection);
+        Assert.assertEquals(resource.insert(projection).getStatusCode(), ProjectionsResource.handleInsertInProjections().getStatusCode());
+        verify(service, times(1)).insert(projection);
+    }
+
+    @Test
+    public void UpdateRightData() {
+        ProjectionUpdateReq projection = new ProjectionUpdateReq();
+        when(service.update(projection)).thenReturn(true);
+        Assert.assertEquals(resource.update(projection).getStatusCode(), ProjectionsResource.handleUpdateInProjections().getStatusCode());
+        verify(service, times(1)).update(projection);
+    }
+
+    @Test
+    public void FilterRightData() {
+        ProjectionViewResposne projectionViewResposne = new ProjectionViewResposne("Matrix", "Sala 1");
+        List<ProjectionViewResposne> list = new LinkedList<>();
+
+        FilterReq filterReq = new FilterReq("Matrix", LocalDate.of(2021, 4, 11));
+        list.add(projectionViewResposne);
+        when(service.getSelected(filterReq)).thenReturn(list);
+        Assert.assertEquals(resource.getSelected(filterReq), list);
+
     }
 }

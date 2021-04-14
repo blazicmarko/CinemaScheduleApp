@@ -1,14 +1,14 @@
-package com.example.cinema.model.dbModel;
+package com.example.cinema.model.requestModel;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-public class FilterDB {
+public class FilterReq {
     @NotNull
     private String movieName;
     private LocalDate date;
 
-    public FilterDB(@NotNull String movieName, LocalDate date) {
+    public FilterReq(@NotNull String movieName, LocalDate date) {
         this.movieName = movieName;
         this.date = date;
     }

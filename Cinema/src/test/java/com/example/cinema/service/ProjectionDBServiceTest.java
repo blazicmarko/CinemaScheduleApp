@@ -4,8 +4,8 @@ import com.example.cinema.exception.AppointmentCheckException;
 import com.example.cinema.exception.NoIdException;
 import com.example.cinema.exception.TableEmptyException;
 import com.example.cinema.mapper.ProjectionsMapper;
-import com.example.cinema.model.dbModel.FilterDB;
 import com.example.cinema.model.dbModel.ProjectionDB;
+import com.example.cinema.model.requestModel.FilterReq;
 import com.example.cinema.model.requestModel.ProjectionUpdateReq;
 import com.example.cinema.model.responseModel.ProjectionViewResposne;
 import org.junit.Assert;
@@ -41,8 +41,8 @@ public class ProjectionDBServiceTest {
 
     @Test
     public void getRightDataFilter() {
-        FilterDB filterDB = new FilterDB("Matrix", null);
-        FilterDB filterDB2 = new FilterDB("Matrix", LocalDate.now());
+        FilterReq filterReq = new FilterReq("Matrix", null);
+        FilterReq filterReq2 = new FilterReq("Matrix", LocalDate.now());
 
         List<ProjectionViewResposne> list = Stream.of(
                 new ProjectionViewResposne("Matrix", "Sala 1"),
@@ -56,20 +56,20 @@ public class ProjectionDBServiceTest {
                 new ProjectionViewResposne("Matrix", "Sala 4")
         ).collect(Collectors.toCollection(LinkedList::new));
 
-        when(mapper.getSelectedNoDate(filterDB)).thenReturn(list);
+        when(mapper.getSelectedNoDate(filterReq)).thenReturn(list);
 
-        when(mapper.getSelected(filterDB2)).thenReturn(list2);
+        when(mapper.getSelected(filterReq2)).thenReturn(list2);
 
-        Assert.assertEquals(list, service.getSelected(filterDB));
+        Assert.assertEquals(list, service.getSelected(filterReq));
 
-        Assert.assertEquals(list2, service.getSelected(filterDB2));
+        Assert.assertEquals(list2, service.getSelected(filterReq2));
     }
 
     @Test
     public void getEmptyListFilter() {
-        FilterDB filterDB = new FilterDB("blbalba", null);
-        when(mapper.getSelectedNoDate(filterDB)).thenReturn(new LinkedList<>());
-        Assert.assertThrows(TableEmptyException.class, () -> service.getSelected(filterDB));
+        FilterReq filterReq = new FilterReq("blbalba", null);
+        when(mapper.getSelectedNoDate(filterReq)).thenReturn(new LinkedList<>());
+        Assert.assertThrows(TableEmptyException.class, () -> service.getSelected(filterReq));
     }
 
     @Test

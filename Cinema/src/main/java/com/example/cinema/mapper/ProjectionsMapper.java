@@ -1,7 +1,7 @@
 package com.example.cinema.mapper;
 
-import com.example.cinema.model.dbModel.FilterDB;
 import com.example.cinema.model.dbModel.ProjectionDB;
+import com.example.cinema.model.requestModel.FilterReq;
 import com.example.cinema.model.responseModel.ProjectionViewResposne;
 import com.example.cinema.queryStrings.ProjectionQuery;
 import org.apache.ibatis.annotations.*;
@@ -29,10 +29,10 @@ public interface ProjectionsMapper {
     Boolean update(@Param("vars") Map<String, String> vars, @Param("id") Integer id);
 
     @Select(ProjectionQuery.GET_SELECTED)
-    List<ProjectionViewResposne> getSelected(FilterDB filterDB);
+    List<ProjectionViewResposne> getSelected(FilterReq filterReq);
 
     @Select(ProjectionQuery.GET_SELECTED_NO_DATE)
-    List<ProjectionViewResposne> getSelectedNoDate(FilterDB filterDB);
+    List<ProjectionViewResposne> getSelectedNoDate(FilterReq filterReq);
 
     @Select(ProjectionQuery.IS_FREE_TO_ISNERT)
     Integer isFreeToInsert(ProjectionDB projectionDB);
