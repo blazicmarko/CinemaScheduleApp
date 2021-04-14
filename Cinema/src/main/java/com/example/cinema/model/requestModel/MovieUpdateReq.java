@@ -26,6 +26,15 @@ public class MovieUpdateReq {
     @ValidTime(groups = ThirdPriorGroup.class)
     private LocalTime time;
 
+    public MovieUpdateReq(Integer id, String name, @Min(value = 1, groups = SecondPriorGroup.class) @Max(value = 10, groups = SecondPriorGroup.class) Double grade, @Min(value = 1900, groups = SecondPriorGroup.class) @Max(value = 2021, groups = SecondPriorGroup.class) Integer year, Integer idGenre, LocalTime time) {
+        this.id = id;
+        this.name = name;
+        this.grade = grade;
+        this.year = year;
+        this.idGenre = idGenre;
+        this.time = time;
+    }
+
     public MovieUpdateReq() {
 
     }

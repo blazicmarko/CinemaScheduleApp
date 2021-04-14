@@ -32,10 +32,6 @@ public class MoviesService {
         return moviesMapper.findTime(projection);
     }
 
-    public Integer getLastId() {
-        return InitService.getMovieLastId();
-    }
-
     public List<MovieDB> findAll() {
         return moviesMapper.findAll();
     }

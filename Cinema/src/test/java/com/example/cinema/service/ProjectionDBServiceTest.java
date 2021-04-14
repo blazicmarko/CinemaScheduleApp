@@ -142,8 +142,14 @@ public class ProjectionDBServiceTest {
     }
 
     @Test
-    public void UpdateReturnNoIdException(){
+    public void UpdateReturnNoIdExceptionForNullId() {
         ProjectionUpdateReq projection = new ProjectionUpdateReq(null, 2, 2, LocalDate.of(2021, 7, 14), LocalTime.of(20, 10, 0));
+        Assert.assertThrows(NoIdException.class, () -> service.update(projection));
+    }
+
+    @Test
+    public void UpdateReturnNoIdExceptionForZeroId() {
+        ProjectionUpdateReq projection = new ProjectionUpdateReq(0, 2, 2, LocalDate.of(2021, 7, 14), LocalTime.of(20, 10, 0));
         Assert.assertThrows(NoIdException.class, () -> service.update(projection));
     }
 
