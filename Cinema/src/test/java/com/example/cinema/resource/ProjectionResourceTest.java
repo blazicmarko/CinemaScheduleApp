@@ -188,10 +188,14 @@ public class ProjectionResourceTest {
 
     @Test
     public void FilterRightData() {
-        ProjectionViewResposne projectionViewResposne = new ProjectionViewResposne("Matrix", "Sala 1");
+        ProjectionViewResposne projectionViewResposne = new ProjectionViewResposne();
+        projectionViewResposne.setHallName("Sala 1");
+        projectionViewResposne.setMovieName("Matrix");
         List<ProjectionViewResposne> list = new LinkedList<>();
 
-        FilterReq filterReq = new FilterReq("Matrix", LocalDate.of(2021, 4, 11));
+        FilterReq filterReq = new FilterReq();
+        filterReq.setMovieName("Matrix");
+        filterReq.setDate(LocalDate.of(2021, 4, 11));
         list.add(projectionViewResposne);
         when(service.getSelected(filterReq)).thenReturn(list);
         Assert.assertEquals(resource.getSelected(filterReq), list);

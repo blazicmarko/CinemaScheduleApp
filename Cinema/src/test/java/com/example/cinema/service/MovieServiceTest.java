@@ -36,7 +36,10 @@ class MovieServiceTest {
 
     @Test
     void findTime() {
-        ProjectionDB projection = new ProjectionDB(1, 1, 1);
+        ProjectionDB projection = new ProjectionDB();
+        projection.setId(1);
+        projection.setIdHall(1);
+        projection.setIdMovie(1);
         when(moviesMapper.findTime(projection)).thenReturn(LocalTime.of(2, 0, 0));
         Assert.assertEquals(LocalTime.of(2, 0, 0), moviesService.findTime(projection));
     }
@@ -60,7 +63,10 @@ class MovieServiceTest {
 
     @Test
     void update() {
-        MovieUpdateReq movie = new MovieUpdateReq(1, null, 7.2, null, 1, null);
+        MovieUpdateReq movie = new MovieUpdateReq();
+        movie.setId(1);
+        movie.setGrade(7.2);
+        movie.setIdGenre(1);
         Map<String, String> map = new HashMap<>();
         map.put("grade", "7.2");
         map.put("id_genre", "1");

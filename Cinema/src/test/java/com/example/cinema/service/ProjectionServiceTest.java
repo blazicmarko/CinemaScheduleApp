@@ -22,8 +22,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.mockito.Mockito.*;
 
@@ -41,20 +39,28 @@ public class ProjectionServiceTest {
 
     @Test
     public void getRightDataFilter() {
-        FilterReq filterReq = new FilterReq("Matrix", null);
-        FilterReq filterReq2 = new FilterReq("Matrix", LocalDate.now());
+        FilterReq filterReq = new FilterReq();
+        filterReq.setMovieName("Matrix");
 
-        List<ProjectionViewResposne> list = Stream.of(
-                new ProjectionViewResposne("Matrix", "Sala 1"),
-                new ProjectionViewResposne("Matrix", "Sala 4"),
-                new ProjectionViewResposne("Matrix", "Sala 3"),
-                new ProjectionViewResposne("Matrix", "Sala 2")
-        ).collect(Collectors.toCollection(LinkedList::new));
+        FilterReq filterReq2 = new FilterReq();
+        filterReq2.setMovieName("Matrix");
+        filterReq2.setDate(LocalDate.now());
 
-        List<ProjectionViewResposne> list2 = Stream.of(
-                new ProjectionViewResposne("Matrix", "Sala 1"),
-                new ProjectionViewResposne("Matrix", "Sala 4")
-        ).collect(Collectors.toCollection(LinkedList::new));
+        List<ProjectionViewResposne> list = new LinkedList<>();
+        List<ProjectionViewResposne> list2 = new LinkedList<>();
+        ProjectionViewResposne projectionViewResposne = new ProjectionViewResposne();
+        projectionViewResposne.setMovieName("Matrix");
+        projectionViewResposne.setHallName("Sala 1");
+        list.add(projectionViewResposne);
+        list2.add(projectionViewResposne);
+        projectionViewResposne.setHallName("Sala 2");
+        list.add(projectionViewResposne);
+        projectionViewResposne.setHallName("Sala 3");
+        list.add(projectionViewResposne);
+        projectionViewResposne.setHallName("Sala 4");
+        list.add(projectionViewResposne);
+        list2.add(projectionViewResposne);
+
 
         when(mapper.getSelectedNoDate(filterReq)).thenReturn(list);
 
@@ -67,28 +73,36 @@ public class ProjectionServiceTest {
 
     @Test
     public void getEmptyListFilter() {
-        FilterReq filterReq = new FilterReq("blbalba", null);
+        FilterReq filterReq = new FilterReq();
+        filterReq.setMovieName("blabla");
         when(mapper.getSelectedNoDate(filterReq)).thenReturn(new LinkedList<>());
         Assert.assertThrows(TableEmptyException.class, () -> service.getSelected(filterReq));
     }
 
     @Test
-    public void getAllNumOfProjections(){
-        when(mapper.findAll()).thenReturn(Stream.of(
-                new ProjectionDB(1, 1, 1),
-                new ProjectionDB(2, 2, 2)
-        ).collect(Collectors.toList()));
+    public void getAllNumOfProjections() {
+        List<ProjectionDB> list = new LinkedList<>();
+        ProjectionDB projection = new ProjectionDB();
+        projection.setId(1);
+        list.add(projection);
+        projection.setId(2);
+        list.add(projection);
 
-        Assert.assertEquals(2,service.getAll().size());
-        verify(mapper,times(1)).findAll();
+        when(mapper.findAll()).thenReturn(list);
+
+        Assert.assertEquals(2, service.getAll().size());
+        verify(mapper, times(1)).findAll();
     }
 
     @Test()
     public void getAllReturningRightData() {
-        List<ProjectionDB> list = Stream.of(
-                new ProjectionDB(1, 1, 1),
-                new ProjectionDB(2, 2, 2)
-        ).collect(Collectors.toCollection(LinkedList::new));
+        List<ProjectionDB> list = new LinkedList<>();
+        ProjectionDB projection = new ProjectionDB();
+        projection.setId(1);
+        list.add(projection);
+        projection.setId(2);
+        list.add(projection);
+
         when(mapper.findAll()).thenReturn(list);
 
         Assert.assertEquals(list, service.getAll());
@@ -103,7 +117,8 @@ public class ProjectionServiceTest {
 
     @Test
     public void InsertReturningRightData() {
-        ProjectionDB projectionDB = new ProjectionDB(1, 1, 1, LocalDate.now(), LocalTime.now(), null);
+        ProjectionDB projectionDB = new ProjectionDB();
+
         when(mapper.insert(projectionDB)).thenReturn(true);
         Assert.assertEquals(projectionDB, service.insert(projectionDB));
         verify(mapper, times(1)).insert(projectionDB);
@@ -111,8 +126,7 @@ public class ProjectionServiceTest {
 
     @Test
     public void InsertThrowAppointmentCheck() {
-        ProjectionDB projectionDB = new ProjectionDB(1, 1, 1, LocalDate.of(2021, 5, 8),
-                LocalTime.of(20, 0, 0), null);
+        ProjectionDB projectionDB = new ProjectionDB();
         when(mapper.isFreeToInsert(projectionDB)).thenReturn(1);
         Assert.assertThrows(AppointmentCheckException.class, () -> service.insert(projectionDB));
 
@@ -120,11 +134,27 @@ public class ProjectionServiceTest {
 
     @Test
     public void UpdateReturningRightData() {
-        ProjectionDB oldProjectionDB = new ProjectionDB(1, 1, 1, LocalDate.of(2021, 7, 13),
-                LocalTime.of(20, 0, 0), LocalTime.of(22, 30, 0));
-        ProjectionDB newProjectionDB = new ProjectionDB(1, 2, 2, LocalDate.of(2021, 7, 14),
-                LocalTime.of(20, 10, 0), LocalTime.of(22, 40, 0));
-        ProjectionUpdateReq projection = new ProjectionUpdateReq(1, 2, 2, LocalDate.of(2021, 7, 14), LocalTime.of(20, 10, 0));
+        ProjectionDB oldProjectionDB = new ProjectionDB();
+        oldProjectionDB.setId(1);
+        oldProjectionDB.setIdMovie(1);
+        oldProjectionDB.setIdHall(1);
+        oldProjectionDB.setDate(LocalDate.of(2021, 7, 13));
+        oldProjectionDB.setStartTime(LocalTime.of(20, 0, 0));
+        oldProjectionDB.setEndTime(LocalTime.of(22, 30, 0));
+        ProjectionDB newProjectionDB = new ProjectionDB();
+        newProjectionDB.setId(1);
+        newProjectionDB.setIdMovie(2);
+        newProjectionDB.setIdHall(2);
+        newProjectionDB.setDate(LocalDate.of(2021, 7, 14));
+        newProjectionDB.setStartTime(LocalTime.of(20, 10, 0));
+        newProjectionDB.setEndTime(LocalTime.of(22, 40, 0));
+        ProjectionUpdateReq projection = new ProjectionUpdateReq();
+        projection.setId(1);
+        projection.setIdMovie(2);
+        projection.setIdHall(2);
+        projection.setDate(LocalDate.of(2021, 7, 14));
+        projection.setStartTime(LocalTime.of(20, 10, 0));
+        projection.setEndTime(LocalTime.of(22, 40, 0));
         Map<String, String> map = new HashMap<>();
         map.put("date", "2021-07-14");
         map.put("startTime", "20:00:00");
@@ -143,21 +173,33 @@ public class ProjectionServiceTest {
 
     @Test
     public void UpdateReturnNoIdExceptionForNullId() {
-        ProjectionUpdateReq projection = new ProjectionUpdateReq(null, 2, 2, LocalDate.of(2021, 7, 14), LocalTime.of(20, 10, 0));
+        ProjectionUpdateReq projection = new ProjectionUpdateReq();
         Assert.assertThrows(NoIdException.class, () -> service.update(projection));
     }
 
     @Test
     public void UpdateReturnNoIdExceptionForZeroId() {
-        ProjectionUpdateReq projection = new ProjectionUpdateReq(0, 2, 2, LocalDate.of(2021, 7, 14), LocalTime.of(20, 10, 0));
+        ProjectionUpdateReq projection = new ProjectionUpdateReq();
+        projection.setId(0);
         Assert.assertThrows(NoIdException.class, () -> service.update(projection));
     }
 
     @Test
     public void UpdateReturnAppointmentCheckException() {
-        ProjectionDB oldProjectionDB = new ProjectionDB(1, 1, 1, LocalDate.of(2021, 7, 13),
-                LocalTime.of(20, 0, 0), LocalTime.of(22, 30, 0));
-        ProjectionUpdateReq projection = new ProjectionUpdateReq(1, 2, 2, LocalDate.of(2021, 7, 14), LocalTime.of(20, 10, 0));
+        ProjectionDB oldProjectionDB = new ProjectionDB();
+        oldProjectionDB.setId(1);
+        oldProjectionDB.setIdMovie(1);
+        oldProjectionDB.setIdHall(1);
+        oldProjectionDB.setDate(LocalDate.of(2021, 7, 13));
+        oldProjectionDB.setStartTime(LocalTime.of(20, 0, 0));
+        oldProjectionDB.setEndTime(LocalTime.of(22, 30, 0));
+        ProjectionUpdateReq projection = new ProjectionUpdateReq();
+        projection.setId(1);
+        projection.setIdMovie(2);
+        projection.setIdHall(2);
+        projection.setDate(LocalDate.of(2021, 7, 14));
+        projection.setStartTime(LocalTime.of(20, 10, 0));
+        projection.setEndTime(LocalTime.of(22, 40, 0));
 
         when(mapper.findOne(oldProjectionDB.getId())).thenReturn(1);
         when(mapper.findSpecific(projection.getId())).thenReturn(oldProjectionDB);

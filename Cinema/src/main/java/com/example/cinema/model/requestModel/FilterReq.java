@@ -8,9 +8,7 @@ public class FilterReq {
     private String movieName;
     private LocalDate date;
 
-    public FilterReq(@NotNull String movieName, LocalDate date) {
-        this.movieName = movieName;
-        this.date = date;
+    public FilterReq() {
     }
 
     public String getMovieName() {
