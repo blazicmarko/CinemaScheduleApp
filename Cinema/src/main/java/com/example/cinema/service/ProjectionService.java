@@ -34,7 +34,7 @@ public class ProjectionService {
         this.hallsService = hallsService;
     }
 
-    public ProjectionReq insert(ProjectionReq projectionReq) {
+    public ProjectionRespone insert(ProjectionReq projectionReq) {
         ProjectionDB projectionDB = makeDBModel(projectionReq);
         LocalTime movieTime = moviesService.findTime(projectionDB);
         LocalTime time = projectionsMapper.getEndTime(projectionDB, movieTime);
@@ -43,7 +43,7 @@ public class ProjectionService {
         numOfProjections = projectionsMapper.isFreeToInsert(projectionDB);
         if (numOfProjections == 0) {
             projectionsMapper.insert(projectionDB);
-            return projectionReq;
+            return fromDBtoResponse(makeDBModel(projectionReq));
         } else {
             String message = getListOfFreeHalls(projectionDB);
             throw new AppointmentCheckException(message);
