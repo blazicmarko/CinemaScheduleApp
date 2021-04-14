@@ -6,12 +6,15 @@ import com.example.cinema.exception.WrongGenreNameException;
 import com.example.cinema.mapper.MoviesMapper;
 import com.example.cinema.model.dbModel.MovieDB;
 import com.example.cinema.model.dbModel.ProjectionDB;
+import com.example.cinema.model.requestModel.MovieReq;
 import com.example.cinema.model.requestModel.MovieUpdateReq;
+import com.example.cinema.model.responseModel.MovieResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,18 +41,30 @@ public class MoviesService {
             return time;
     }
 
-    public List<MovieDB> findAll() {
+    public List<MovieResponse> findAll() {
         List<MovieDB> list = moviesMapper.findAll();
         if (list == null) {
             throw new TableEmptyException("No movie with that name in table");
         } else
-            return list;
+            return fromDBListToResponseList(list);
     }
 
-    public void insert(MovieDB movieDB) {
+    public void insert(MovieReq movieReq) {
+        MovieDB movieDB = makeDBModel(movieReq);
         moviesMapper.insert(movieDB);
         InitService.setMovieLastId(moviesMapper.getLastId());
         InitService.setMovieNames(moviesMapper.getAllNames());
+    }
+
+    private MovieDB makeDBModel(MovieReq movieReq) {
+        MovieDB movieDB = new MovieDB();
+        movieDB.setId(movieReq.getId());
+        movieDB.setGrade(movieReq.getGrade());
+        movieDB.setIdGenre(movieReq.getIdGenre());
+        movieDB.setName(movieReq.getName());
+        movieDB.setTime(movieReq.getTime());
+        movieDB.setYear(movieReq.getYear());
+        return movieDB;
     }
 
     public void update(MovieUpdateReq movie) {
@@ -74,15 +89,15 @@ public class MoviesService {
     }
 
 
-    public List<MovieDB> getByName(String name) {
+    public List<MovieResponse> getByName(String name) {
         List<MovieDB> list = moviesMapper.getByName(name);
         if (list == null) {
             throw new TableEmptyException("No movie with that name in table");
         } else
-            return list;
+            return fromDBListToResponseList(list);
     }
 
-    public List<MovieDB> getByGenre(String genre) {
+    public List<MovieResponse> getByGenre(String genre) {
         Integer idGenre = genreService.getGenreIdByName(genre);
         if (idGenre == null) {
             throw new WrongGenreNameException("There is no genre with that name!");
@@ -90,9 +105,29 @@ public class MoviesService {
             List<MovieDB> list = moviesMapper.getByGenre(idGenre);
             if (list == null) {
                 throw new TableEmptyException("No movie with that name in table");
-            } else
-                return list;
+            } else {
+                return fromDBListToResponseList(list);
+            }
         }
 
+    }
+
+    public MovieResponse fromDBtoResponse(MovieDB movieDB) {
+        MovieResponse movieResponse = new MovieResponse();
+        movieResponse.setId(movieDB.getId());
+        movieResponse.setGrade(movieDB.getGrade());
+        movieResponse.setIdGenre(movieDB.getIdGenre());
+        movieResponse.setName(movieDB.getName());
+        movieResponse.setTime(movieDB.getTime());
+        movieResponse.setYear(movieDB.getYear());
+        return movieResponse;
+    }
+
+    public List<MovieResponse> fromDBListToResponseList(List<MovieDB> list) {
+        List<MovieResponse> responseList = new LinkedList<>();
+        for (MovieDB movieDB : list) {
+            responseList.add(fromDBtoResponse(movieDB));
+        }
+        return responseList;
     }
 }

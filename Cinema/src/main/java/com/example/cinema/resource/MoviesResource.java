@@ -1,8 +1,9 @@
 package com.example.cinema.resource;
 
-import com.example.cinema.model.dbModel.MovieDB;
+import com.example.cinema.model.requestModel.MovieReq;
 import com.example.cinema.model.requestModel.MovieUpdateReq;
 import com.example.cinema.model.responseModel.BasicResponse;
+import com.example.cinema.model.responseModel.MovieResponse;
 import com.example.cinema.service.MoviesService;
 import com.example.cinema.validator.sequences.RequestValidationSequence;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,23 +47,23 @@ public class MoviesResource {
     }
 
     @GetMapping("/all")
-    public List<MovieDB> getAll() {
+    public List<MovieResponse> getAll() {
         return moviesService.findAll();
     }
 
     @GetMapping("/findMovieByName")
-    public List<MovieDB> getByName(@RequestBody String name) {
+    public List<MovieResponse> getByName(@RequestBody String name) {
         return moviesService.getByName(name);
     }
 
     @GetMapping("/findMoviesByGenre")
-    public List<MovieDB> getByGenre(@RequestBody String genre) {
+    public List<MovieResponse> getByGenre(@RequestBody String genre) {
         return moviesService.getByGenre(genre);
     }
 
     @PostMapping("/insert")
-    public ResponseEntity<Object> insert(@RequestBody @Validated(RequestValidationSequence.class) MovieDB movieDB) {
-        moviesService.insert(movieDB);
+    public ResponseEntity<Object> insert(@RequestBody @Validated(RequestValidationSequence.class) MovieReq movieReq) {
+        moviesService.insert(movieReq);
         return handleInsertInMovies();
     }
 

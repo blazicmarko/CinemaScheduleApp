@@ -1,11 +1,11 @@
-package com.example.cinema.model.dbModel;
+package com.example.cinema.model.responseModel;
 
-public class HallDB {
+public class CinemaResponse {
     private Integer id;
     private String name;
-    private Integer idCinema;
+    private String addres;
 
-    public HallDB() {
+    public CinemaResponse() {
     }
 
     public Integer getId() {
@@ -24,12 +24,11 @@ public class HallDB {
         this.name = name;
     }
 
-    public Integer getIdCinema() {
-        return idCinema;
+    public String getAddres() {
+        return addres;
     }
 
-    public void setIdCinema(Integer idCinema) {
-        this.idCinema = idCinema;
+    public void setAddres(String addres) {
+        this.addres = addres;
     }
-
 }

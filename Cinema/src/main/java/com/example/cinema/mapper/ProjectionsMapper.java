@@ -35,10 +35,10 @@ public interface ProjectionsMapper {
     List<ProjectionViewResposne> getSelectedNoDate(FilterReq filterReq);
 
     @Select(ProjectionQuery.IS_FREE_TO_ISNERT)
-    Integer isFreeToInsert(ProjectionDB projectionDB);
+    Integer isFreeToInsert(ProjectionDB projectionReq);
 
     @Select(ProjectionQuery.IS_FREE_TO_UPDATE)
-    Integer isFreeToUpdate(ProjectionDB projectionDB);
+    Integer isFreeToUpdate(ProjectionDB projectionReq);
 
     @Select(ProjectionQuery.GET_END_TIME)
     LocalTime getEndTime(ProjectionDB projection, LocalTime time);

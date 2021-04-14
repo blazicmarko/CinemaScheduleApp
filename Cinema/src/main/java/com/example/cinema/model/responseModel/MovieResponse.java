@@ -1,8 +1,8 @@
-package com.example.cinema.model.dbModel;
+package com.example.cinema.model.responseModel;
 
 import java.time.LocalTime;
 
-public class MovieDB {
+public class MovieResponse {
 
     private Integer id;
     private String name;
@@ -11,7 +11,7 @@ public class MovieDB {
     private Integer idGenre;
     private LocalTime time;
 
-    public MovieDB() {
+    public MovieResponse() {
     }
 
     public Integer getId() {

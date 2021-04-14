@@ -1,10 +1,12 @@
 package com.example.cinema.model.dbModel;
 
-
 public class CinemaDB {
     private Integer id;
     private String name;
     private String addres;
+
+    public CinemaDB() {
+    }
 
     public Integer getId() {
         return id;

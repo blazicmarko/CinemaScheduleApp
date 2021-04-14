@@ -1,16 +1,14 @@
 package com.example.cinema.resource;
 
-import com.example.cinema.model.dbModel.ProjectionDB;
 import com.example.cinema.model.requestModel.FilterReq;
+import com.example.cinema.model.requestModel.ProjectionReq;
 import com.example.cinema.model.requestModel.ProjectionUpdateReq;
 import com.example.cinema.model.responseModel.BasicResponse;
+import com.example.cinema.model.responseModel.ProjectionRespone;
 import com.example.cinema.model.responseModel.ProjectionViewResposne;
 import com.example.cinema.service.ProjectionService;
 import com.example.cinema.validator.sequences.RequestValidationSequence;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +56,7 @@ public class ProjectionsResource {
     @GetMapping("/all")
     @ApiOperation(value = "Getting all projections",
             response = LinkedList.class)
-    public List<ProjectionDB> getAll() {
+    public List<ProjectionRespone> getAll() {
         return projectionService.getAll();
 
     }
@@ -71,10 +69,12 @@ public class ProjectionsResource {
             @ApiResponse(code = 201, message = "The projection is inserted into table projections."),
             @ApiResponse(code = 409, message = "Data you used is not acceptable")})
     public ResponseEntity<Object> insert(@RequestBody @Validated(RequestValidationSequence.class)
-                                         @ApiParam(value = "Projection that has all objects",
-                                                 required = true)
-                                         @RequestParam ProjectionDB projectionDB) {
-        projectionService.insert(projectionDB);
+                                         @ApiParam(value = "Projection that has all objects", required = true,
+                                                 examples = @Example(
+                                                         value = {
+                                                                 @ExampleProperty(value = "{'date': '2021-04-16'}", mediaType = "application/json")
+                                                         })) ProjectionReq projectionReq) {
+        projectionService.insert(projectionReq);
         return handleInsertInProjections();
     }
 

@@ -6,7 +6,9 @@ import com.example.cinema.exception.TableEmptyException;
 import com.example.cinema.mapper.ProjectionsMapper;
 import com.example.cinema.model.dbModel.ProjectionDB;
 import com.example.cinema.model.requestModel.FilterReq;
+import com.example.cinema.model.requestModel.ProjectionReq;
 import com.example.cinema.model.requestModel.ProjectionUpdateReq;
+import com.example.cinema.model.responseModel.ProjectionRespone;
 import com.example.cinema.model.responseModel.ProjectionViewResposne;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,8 @@ public class ProjectionService {
         this.hallsService = hallsService;
     }
 
-    public ProjectionDB insert(ProjectionDB projectionDB) {
+    public ProjectionReq insert(ProjectionReq projectionReq) {
+        ProjectionDB projectionDB = makeDBModel(projectionReq);
         LocalTime movieTime = moviesService.findTime(projectionDB);
         LocalTime time = projectionsMapper.getEndTime(projectionDB, movieTime);
         projectionDB.setEndTime(time);
@@ -40,27 +43,37 @@ public class ProjectionService {
         numOfProjections = projectionsMapper.isFreeToInsert(projectionDB);
         if (numOfProjections == 0) {
             projectionsMapper.insert(projectionDB);
-            return projectionDB;
+            return projectionReq;
         } else {
             String message = getListOfFreeHalls(projectionDB);
             throw new AppointmentCheckException(message);
         }
     }
 
-    public List<ProjectionDB> getAll() {
+    private ProjectionDB makeDBModel(ProjectionReq projectionReq) {
+        ProjectionDB projectionDB = new ProjectionDB();
+        projectionDB.setId(projectionReq.getId());
+        projectionDB.setIdHall(projectionReq.getIdHall());
+        projectionDB.setIdMovie(projectionReq.getIdMovie());
+        projectionDB.setStartTime(projectionReq.getStartTime());
+        projectionDB.setDate(projectionReq.getDate());
+        return projectionDB;
+    }
+
+    public List<ProjectionRespone> getAll() {
         List<ProjectionDB> list = projectionsMapper.findAll();
         if (list.isEmpty()) {
             throw new TableEmptyException("Table projections is empty");
         } else
-            return list;
+            return fromDBListToResponseList(list);
     }
 
-    public List<ProjectionDB> getFirst() {
+    public List<ProjectionRespone> getFirst() {
         List<ProjectionDB> list = projectionsMapper.findFirst();
         if (list.isEmpty()) {
             throw new TableEmptyException("Table projections is empty");
         } else
-            return list;
+            return fromDBListToResponseList(list);
     }
 
     public boolean update(ProjectionUpdateReq projection) {
@@ -124,22 +137,39 @@ public class ProjectionService {
     }
 
     public String getListOfFreeHalls(ProjectionDB projectionDB) {
-        final Integer[] numOfProjections = {1};
         Integer idCinema = hallsService.findCinemaOfHall(projectionDB);
         List<Integer> listIdHalls;
         List<String> halls = new LinkedList<>();
         listIdHalls = hallsService.findAllHalls(idCinema);
         listIdHalls.forEach((temp) -> {
             projectionDB.setIdHall(temp);
-            numOfProjections[0] = projectionsMapper.isFreeToInsert(projectionDB);
-            if (numOfProjections[0] == 0) {
+            if (projectionsMapper.isFreeToInsert(projectionDB) == 0) {
                 halls.add(hallsService.getName(temp));
             }
         });
         String message = "This appointment is full. Choose available halls :";
         for (String hall : halls) {
-            message=message.concat(hall + " ");
+            message = message.concat(hall + " ");
         }
         return message;
+    }
+
+    public ProjectionRespone fromDBtoResponse(ProjectionDB projectionDB) {
+        ProjectionRespone projectionRespone = new ProjectionRespone();
+        projectionRespone.setId(projectionDB.getId());
+        projectionRespone.setDate(projectionDB.getDate());
+        projectionRespone.setEndTime(projectionDB.getEndTime());
+        projectionRespone.setIdHall(projectionDB.getIdHall());
+        projectionRespone.setIdMovie(projectionDB.getIdMovie());
+        projectionRespone.setStartTime(projectionDB.getStartTime());
+        return projectionRespone;
+    }
+
+    public List<ProjectionRespone> fromDBListToResponseList(List<ProjectionDB> list) {
+        List<ProjectionRespone> responseList = new LinkedList<>();
+        for (ProjectionDB projectionDB : list) {
+            responseList.add(fromDBtoResponse(projectionDB));
+        }
+        return responseList;
     }
 }

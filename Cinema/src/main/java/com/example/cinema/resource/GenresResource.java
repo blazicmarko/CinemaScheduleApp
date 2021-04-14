@@ -1,7 +1,7 @@
 package com.example.cinema.resource;
 
-import com.example.cinema.mapper.GenresMapper;
-import com.example.cinema.model.dbModel.GenreDB;
+import com.example.cinema.model.responseModel.GenreResponse;
+import com.example.cinema.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,15 +12,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/rest/genres")
 public class GenresResource {
-    private GenresMapper genresMapper;
+    private GenreService genresService;
 
     @Autowired
-    public GenresResource(GenresMapper genresMapper) {
-        this.genresMapper = genresMapper;
+    public GenresResource(GenreService genresService) {
+        this.genresService = genresService;
     }
 
     @GetMapping("/all")
-    public List<GenreDB> getAll() {
-        return genresMapper.findAll();
+    public List<GenreResponse> getAll() {
+        return genresService.findAll();
     }
 }

@@ -1,10 +1,9 @@
-package com.example.cinema.model.dbModel;
+package com.example.cinema.model.responseModel;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ProjectionDB {
-
+public class ProjectionRespone {
     private Integer id;
     private Integer idMovie;
     private Integer idHall;
@@ -12,7 +11,7 @@ public class ProjectionDB {
     private LocalTime startTime;
     private LocalTime endTime;
 
-    public ProjectionDB() {
+    public ProjectionRespone() {
     }
 
     public Integer getId() {
