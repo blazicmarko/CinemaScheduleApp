@@ -6,6 +6,8 @@ import com.example.cinema.validator.ValidTime;
 import com.example.cinema.validator.groups.FirstPriorGroup;
 import com.example.cinema.validator.groups.SecondPriorGroup;
 import com.example.cinema.validator.groups.ThirdPriorGroup;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.FutureOrPresent;
@@ -14,8 +16,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Valid
+@ApiModel(description = "Details about projection. Model for database table.")
 public class ProjectionDB {
 
+    @ApiModelProperty(dataType = "Integer.class", notes = "Unique identifier of projection")
     private Integer id;
     @NotNull(groups = FirstPriorGroup.class)
     @ValidIdMovie(groups = SecondPriorGroup.class)

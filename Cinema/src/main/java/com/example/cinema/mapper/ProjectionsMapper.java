@@ -46,5 +46,6 @@ public interface ProjectionsMapper {
     @Select(ProjectionQuery.FIND_SPECIFIC)
     ProjectionDB findSpecific(Integer id);
 
-
+    @Select(ProjectionQuery.FIND_FIRST)
+    List<ProjectionDB> findFirst();
 }

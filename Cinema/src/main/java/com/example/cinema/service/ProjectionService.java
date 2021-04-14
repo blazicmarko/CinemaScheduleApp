@@ -55,6 +55,14 @@ public class ProjectionService {
             return list;
     }
 
+    public List<ProjectionDB> getFirst() {
+        List<ProjectionDB> list = projectionsMapper.findFirst();
+        if (list.isEmpty()) {
+            throw new TableEmptyException("Table projections is empty");
+        } else
+            return list;
+    }
+
     public boolean update(ProjectionUpdateReq projection) {
         Map<String, String> updateVars = checkForUpdate(projection);
         projectionsMapper.update(updateVars, projection.getId());

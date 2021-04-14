@@ -49,4 +49,6 @@ public class ProjectionQuery {
     public static final String FIND_SPECIFIC = "select id, startTime, endTime, date, id_movie as idMovie, id_hall as idHall from projections " +
             "where id = #{id}";
 
+    public static final String FIND_FIRST = "select id, startTime, endTime, date, id_movie as idMovie, id_hall as idHall from projections " +
+            "where id = 1";
 }

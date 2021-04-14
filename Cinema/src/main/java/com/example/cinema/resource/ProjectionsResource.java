@@ -7,6 +7,10 @@ import com.example.cinema.model.responseModel.BasicResponse;
 import com.example.cinema.model.responseModel.ProjectionViewResposne;
 import com.example.cinema.service.ProjectionService;
 import com.example.cinema.validator.sequences.RequestValidationSequence;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.ZonedDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -51,6 +56,8 @@ public class ProjectionsResource {
 
     //get all projections
     @GetMapping("/all")
+    @ApiOperation(value = "Getting all projections",
+            response = LinkedList.class)
     public List<ProjectionDB> getAll() {
         return projectionService.getAll();
 
@@ -59,7 +66,14 @@ public class ProjectionsResource {
     //insert new projection
     @PostMapping("/insert")
     @ResponseBody
-    public ResponseEntity<Object> insert(@RequestBody @Validated(RequestValidationSequence.class) ProjectionDB projectionDB) {
+    @ApiOperation(value = "Inserting new projection")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "The projection is inserted into table projections."),
+            @ApiResponse(code = 409, message = "Data you used is not acceptable")})
+    public ResponseEntity<Object> insert(@RequestBody @Validated(RequestValidationSequence.class)
+                                         @ApiParam(value = "Projection that has all objects",
+                                                 required = true)
+                                         @RequestParam ProjectionDB projectionDB) {
         projectionService.insert(projectionDB);
         return handleInsertInProjections();
     }
