@@ -1,5 +1,7 @@
 package com.example.cinema.service;
 
+import com.example.cinema.exception.NoIdException;
+import com.example.cinema.exception.TableEmptyException;
 import com.example.cinema.exception.WrongGenreNameException;
 import com.example.cinema.mapper.MoviesMapper;
 import com.example.cinema.model.dbModel.MovieDB;
@@ -45,12 +47,28 @@ class MovieServiceTest {
     }
 
     @Test
+    void findTimeNullException() {
+        ProjectionDB projection = new ProjectionDB();
+        projection.setId(1);
+        projection.setIdHall(1);
+        projection.setIdMovie(1);
+        when(moviesMapper.findTime(projection)).thenReturn(null);
+        Assert.assertThrows(NoIdException.class, () -> moviesService.findTime(projection));
+    }
+
+    @Test
     void findAll() {
         List<MovieDB> list = new LinkedList<>();
         list.add(new MovieDB());
         list.add(new MovieDB());
         when(moviesMapper.findAll()).thenReturn(list);
         Assert.assertEquals(moviesService.findAll(), list);
+    }
+
+    @Test
+    void findAllEmptyList() {
+        when(moviesMapper.findAll()).thenReturn(null);
+        Assert.assertThrows(TableEmptyException.class, () -> moviesService.findAll());
     }
 
     @Test
@@ -84,6 +102,12 @@ class MovieServiceTest {
     }
 
     @Test
+    void getByNameEmptyList() {
+        when(moviesMapper.getByName("Titanic")).thenReturn(null);
+        Assert.assertThrows(TableEmptyException.class, () -> moviesService.getByName("Titanic"));
+    }
+
+    @Test
     void getByGenreRight() {
         List<MovieDB> list = new LinkedList<>();
         list.add(new MovieDB());
@@ -94,10 +118,14 @@ class MovieServiceTest {
 
     @Test
     void getByGenreException() {
-        List<MovieDB> list = new LinkedList<>();
-        list.add(new MovieDB());
         when(genreService.getGenreIdByName("Titanic")).thenReturn(null);
-        when(moviesMapper.getByGenre(1)).thenReturn(list);
         Assert.assertThrows(WrongGenreNameException.class, () -> moviesService.getByGenre("Titanic"));
+    }
+
+    @Test
+    void getByGenreEmptyList() {
+        when(genreService.getGenreIdByName("Titanic")).thenReturn(1);
+        when(moviesMapper.getByGenre(1)).thenReturn(null);
+        Assert.assertThrows(TableEmptyException.class, () -> moviesService.getByGenre("Titanic"));
     }
 }

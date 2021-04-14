@@ -1,5 +1,7 @@
 package com.example.cinema.service;
 
+import com.example.cinema.exception.NoIdException;
+import com.example.cinema.exception.TableEmptyException;
 import com.example.cinema.exception.WrongGenreNameException;
 import com.example.cinema.mapper.MoviesMapper;
 import com.example.cinema.model.dbModel.MovieDB;
@@ -29,11 +31,19 @@ public class MoviesService {
 
 
     public LocalTime findTime(ProjectionDB projection) {
-        return moviesMapper.findTime(projection);
+        LocalTime time = moviesMapper.findTime(projection);
+        if (time == null) {
+            throw new NoIdException("There is no Movie with ID you inserted.");
+        } else
+            return time;
     }
 
     public List<MovieDB> findAll() {
-        return moviesMapper.findAll();
+        List<MovieDB> list = moviesMapper.findAll();
+        if (list == null) {
+            throw new TableEmptyException("No movie with that name in table");
+        } else
+            return list;
     }
 
     public void insert(MovieDB movieDB) {
@@ -65,14 +75,24 @@ public class MoviesService {
 
 
     public List<MovieDB> getByName(String name) {
-        return moviesMapper.getByName(name);
+        List<MovieDB> list = moviesMapper.getByName(name);
+        if (list == null) {
+            throw new TableEmptyException("No movie with that name in table");
+        } else
+            return list;
     }
 
     public List<MovieDB> getByGenre(String genre) {
         Integer idGenre = genreService.getGenreIdByName(genre);
         if (idGenre == null) {
             throw new WrongGenreNameException("There is no genre with that name!");
-        } else
-            return moviesMapper.getByGenre(idGenre);
+        } else {
+            List<MovieDB> list = moviesMapper.getByGenre(idGenre);
+            if (list == null) {
+                throw new TableEmptyException("No movie with that name in table");
+            } else
+                return list;
+        }
+
     }
 }
