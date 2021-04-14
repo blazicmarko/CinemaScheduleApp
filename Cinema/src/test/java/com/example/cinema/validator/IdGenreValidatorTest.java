@@ -15,7 +15,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(fullyQualifiedNames = "com.example.cinema.service.*")
 @SpringBootTest
-public class IdGenreDBValidatorTest {
+public class IdGenreValidatorTest {
 
 
     IdGenreValidator genreValidator;

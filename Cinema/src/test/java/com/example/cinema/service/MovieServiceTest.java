@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-class MovieDBServiceTest {
+class MovieServiceTest {
 
     @Autowired
     MoviesService moviesService;

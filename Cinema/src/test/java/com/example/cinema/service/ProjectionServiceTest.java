@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ProjectionDBServiceTest {
+public class ProjectionServiceTest {
     @Autowired
     private ProjectionService service;
 
