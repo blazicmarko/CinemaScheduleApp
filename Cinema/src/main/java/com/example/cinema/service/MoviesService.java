@@ -56,7 +56,7 @@ public class MoviesService {
         InitService.setMovieNames(moviesMapper.getAllNames());
     }
 
-    private MovieDB makeDBModel(MovieReq movieReq) {
+    public MovieDB makeDBModel(MovieReq movieReq) {
         MovieDB movieDB = new MovieDB();
         movieDB.setId(movieReq.getId());
         movieDB.setGrade(movieReq.getGrade());

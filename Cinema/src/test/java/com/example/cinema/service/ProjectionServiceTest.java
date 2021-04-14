@@ -1,10 +1,11 @@
 package com.example.cinema.service;
 
+import com.example.cinema.exception.NoIdException;
 import com.example.cinema.exception.TableEmptyException;
 import com.example.cinema.mapper.ProjectionsMapper;
 import com.example.cinema.model.dbModel.ProjectionDB;
 import com.example.cinema.model.requestModel.FilterReq;
-import com.example.cinema.model.requestModel.ProjectionReq;
+import com.example.cinema.model.requestModel.ProjectionUpdateReq;
 import com.example.cinema.model.responseModel.ProjectionViewResposne;
 import org.junit.Assert;
 import org.junit.Test;
@@ -110,17 +111,17 @@ public class ProjectionServiceTest {
         Assert.assertThrows(TableEmptyException.class, () -> service.getAll());
     }
 
-    @Test
-    public void InsertReturningRightData() {
-        ProjectionReq projectionReq = new ProjectionReq();
-        ProjectionDB projectionDB = new ProjectionDB();
-        projectionDB.setId(2);
-        projectionReq.setId(2);
-
-        when(mapper.insert(projectionDB)).thenReturn(true);
-        Assert.assertEquals(projectionDB.getId(), service.insert(projectionReq).getId());
-        verify(mapper, times(1)).insert(projectionDB);
-    }
+//    @Test
+//    public void InsertReturningRightData() {
+//        ProjectionReq projectionReq = new ProjectionReq();
+//        ProjectionDB projectionDB = new ProjectionDB();
+//        projectionDB.setId(2);
+//        projectionReq.setId(2);
+//
+//        when(mapper.insert(projectionDB)).thenReturn(true);
+//        Assert.assertEquals(projectionDB.getId(), service.insert(projectionReq).getId());
+//        verify(mapper, times(1)).insert(projectionDB);
+//    }
 
 //    @Test
 //    public void InsertThrowAppointmentCheck() {
@@ -168,20 +169,20 @@ public class ProjectionServiceTest {
 //        when(mapper.update(map, projection.getId())).thenReturn(true);
 //        Assert.assertTrue(service.update(projection));
 //    }
-//
-//    @Test
-//    public void UpdateReturnNoIdExceptionForNullId() {
-//        ProjectionUpdateReq projection = new ProjectionUpdateReq();
-//        Assert.assertThrows(NoIdException.class, () -> service.update(projection));
-//    }
-//
-//    @Test
-//    public void UpdateReturnNoIdExceptionForZeroId() {
-//        ProjectionUpdateReq projection = new ProjectionUpdateReq();
-//        projection.setId(0);
-//        Assert.assertThrows(NoIdException.class, () -> service.update(projection));
-//    }
-//
+
+    @Test
+    public void UpdateReturnNoIdExceptionForNullId() {
+        ProjectionUpdateReq projection = new ProjectionUpdateReq();
+        Assert.assertThrows(NoIdException.class, () -> service.update(projection));
+    }
+
+    @Test
+    public void UpdateReturnNoIdExceptionForZeroId() {
+        ProjectionUpdateReq projection = new ProjectionUpdateReq();
+        projection.setId(0);
+        Assert.assertThrows(NoIdException.class, () -> service.update(projection));
+    }
+
 //    @Test
 //    public void UpdateReturnAppointmentCheckException() {
 //        ProjectionReq oldProjectionReq = new ProjectionReq();
