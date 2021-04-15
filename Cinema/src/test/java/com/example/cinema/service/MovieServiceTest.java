@@ -6,13 +6,17 @@ import com.example.cinema.exception.WrongGenreNameException;
 import com.example.cinema.mapper.MoviesMapper;
 import com.example.cinema.model.dbModel.MovieDB;
 import com.example.cinema.model.dbModel.ProjectionDB;
+import com.example.cinema.model.requestModel.MovieReq;
 import com.example.cinema.model.requestModel.MovieUpdateReq;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -39,6 +43,17 @@ class MovieServiceTest {
     @InjectMocks
     MoviesService moviesService;
 
+    private AutoCloseable closeable;
+
+    @Before
+    public void openMocks() {
+        closeable = MockitoAnnotations.openMocks(this);
+    }
+
+    @After
+    public void releaseMocks() throws Exception {
+        closeable.close();
+    }
 
     @Test
     void findTime() {
@@ -75,15 +90,13 @@ class MovieServiceTest {
         Assert.assertThrows(TableEmptyException.class, () -> moviesService.findAll());
     }
 
-//    @Test
-//    void insert() {
-//        MovieReq movieReq = new MovieReq();
-//        movieReq.setId(10);
-//        MovieDB movieDB = moviesService.makeDBModel(movieReq);
-//        mock(MoviesService.class).makeDBModel(movieReq);
-//        moviesService.insert(movieReq);
-//        verify(moviesMapper,times(1)).insert(movieDB);
-//    }
+    @Test
+    void insert() {
+        MovieReq movieReq = new MovieReq();
+        movieReq.setId(10);
+        Assert.assertTrue(moviesService.insert(movieReq));
+        verify(moviesMapper, times(1)).insert(any());
+    }
 
     @Test
     void update() {

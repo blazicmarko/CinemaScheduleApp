@@ -65,7 +65,7 @@ public class MoviesResource {
 
     @Operation(summary = "Filter all movies by name")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "All movies",
+            @ApiResponse(responseCode = "200", description = "All movies with selected name",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = MovieResponse.class))}),
             @ApiResponse(responseCode = "204", description = "Table empty",
@@ -77,7 +77,7 @@ public class MoviesResource {
 
     @Operation(summary = "Filter all movies by genre")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "All movies",
+            @ApiResponse(responseCode = "200", description = "All movies with selected genre",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = MovieResponse.class))}),
             @ApiResponse(responseCode = "204", description = "Table empty",

@@ -54,7 +54,7 @@ class MoviesResourceTest {
     @Test
     void insertRightData() {
         MovieReq movie = new MovieReq();
-        doNothing().when(service).insert(movie);
+        when(service.insert(movie)).thenReturn(true);
         Assert.assertEquals(resource.insert(movie).getStatusCode(), MoviesResource.handleInsertInMovies().getStatusCode());
         verify(service, times(1)).insert(movie);
 

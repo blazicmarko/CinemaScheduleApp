@@ -18,7 +18,6 @@ import java.time.LocalTime;
 @Schema(name = "ProjectionReq")
 public class ProjectionReq {
 
-    @NotNull
     @Schema(description = "Unique identifier of the Projection.",
             example = "1")
     private Integer id;

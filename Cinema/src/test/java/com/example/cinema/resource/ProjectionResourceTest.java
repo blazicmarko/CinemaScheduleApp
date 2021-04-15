@@ -174,8 +174,7 @@ public class ProjectionResourceTest {
     @Test
     public void InsertRightData() {
         ProjectionReq projection = new ProjectionReq();
-        ProjectionRespone projectionRespone = new ProjectionRespone();
-        when(service.insert(projection)).thenReturn(projectionRespone);
+        when(service.insert(projection)).thenReturn(true);
         Assert.assertEquals(resource.insert(projection).getStatusCode(), ProjectionsResource.handleInsertInProjections().getStatusCode());
         verify(service, times(1)).insert(projection);
     }

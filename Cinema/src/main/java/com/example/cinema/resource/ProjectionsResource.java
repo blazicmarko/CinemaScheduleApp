@@ -104,7 +104,7 @@ public class ProjectionsResource {
 
     @Operation(summary = "Filter your projects with name and date")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Get all projections",
+            @ApiResponse(responseCode = "200", description = "Get filtered projections",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = ProjectionViewResposne.class))}),
             @ApiResponse(responseCode = "204", description = "Table empty",
