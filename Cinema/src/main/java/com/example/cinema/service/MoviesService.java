@@ -55,6 +55,7 @@ public class MoviesService {
 
     public boolean insert(MovieReq movieReq) {
         MovieDB movieDB = makeDBModel(movieReq);
+        getLogger().debug("DB operation insert:");
         moviesMapper.insert(movieDB);
         InitService.setMovieLastId(moviesMapper.getLastId());
         InitService.setMovieNames(moviesMapper.getAllNames());
@@ -73,7 +74,9 @@ public class MoviesService {
     }
 
     public void update(MovieUpdateReq movie) {
+        getLogger().debug("Checking data for update.");
         Map<String, String> vars = checkForUpdate(movie);
+        getLogger().debug("DB operation update:");
         moviesMapper.update(vars, movie.getId());
         InitService.setMovieNames(moviesMapper.getAllNames());
     }
@@ -90,6 +93,7 @@ public class MoviesService {
             vars.put("time", movie.getTime().toString());
         if (movie.getYear() != null)
             vars.put("year", movie.getYear().toString());
+        getLogger().debug("Data checked for update.");
         return vars;
     }
 

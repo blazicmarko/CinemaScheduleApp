@@ -38,12 +38,16 @@ public class ProjectionService {
 
     public boolean insert(ProjectionReq projectionReq) {
         ProjectionDB projectionDB = makeDBModel(projectionReq);
+        getLogger().debug("Seting endTime of projection.");
         LocalTime movieTime = moviesService.findTime(projectionDB);
         LocalTime time = projectionsMapper.getEndTime(projectionDB, movieTime);
         projectionDB.setEndTime(time);
+        getLogger().debug("EndTime of projection set on " + time + " .");
         Integer numOfProjections;
+        getLogger().debug("Checking availability of date and time for projection");
         numOfProjections = projectionsMapper.isFreeToInsert(projectionDB);
         if (numOfProjections == 0) {
+            getLogger().debug("Check passed.");
             getLogger().debug("DB operation insert:");
             projectionsMapper.insert(projectionDB);
             return true;
@@ -85,6 +89,7 @@ public class ProjectionService {
     public Map<String, String> checkForUpdate(ProjectionUpdateReq projection) {
         Map<String, String> updateVars = new HashMap<>();
         ProjectionDB oldProjectionDB;
+        getLogger().debug("Checking id of projection for update.");
         if (projection.getId() != null) {
             if (projectionsMapper.findOne(projection.getId()) == 0) {
                 getLogger().error("NoIdException thrown in update method because there is no id=" + projection.getId() + " in table.");
@@ -95,6 +100,7 @@ public class ProjectionService {
             getLogger().error("NoIdException thrown in update method because there is no id=" + projection.getId() + " in table.");
             throw new NoIdException("There is no inserted id in your data of projections.");
         }
+        getLogger().debug("Check passed for update.");
         if (projection.getDate() != null) {
             updateVars.put("date", projection.getDate().toString());
             oldProjectionDB.setDate(projection.getDate());
@@ -111,12 +117,16 @@ public class ProjectionService {
             updateVars.put("id_movie", projection.getIdMovie().toString());
             oldProjectionDB.setIdMovie(projection.getIdMovie());
         }
+        getLogger().debug("Seting endTime of projection(update).");
         LocalTime movieTime = moviesService.findTime(oldProjectionDB);
         LocalTime time = projectionsMapper.getEndTime(oldProjectionDB, movieTime);
         oldProjectionDB.setEndTime(time);
+        getLogger().debug("EndTime of projection set on " + time + " (update).");
+        getLogger().debug("Checking availability of date and time for projection(update)");
         if (projectionsMapper.isFreeToUpdate(oldProjectionDB) == 0) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
             updateVars.put("endTime", oldProjectionDB.getEndTime().format(dtf));
+            getLogger().debug("Check passed(update).");
             return updateVars;
         } else {
             getLogger().error("AppointmentCheckException thrown for time :" + oldProjectionDB.getStartTime().toString() +
@@ -144,6 +154,7 @@ public class ProjectionService {
     }
 
     public String getListOfFreeHalls(ProjectionDB projectionDB) {
+        getLogger().debug("Getting list of free halls for AppointmentCheckException.");
         Integer idCinema = hallsService.findCinemaOfHall(projectionDB);
         List<Integer> listIdHalls;
         List<String> halls = new LinkedList<>();
