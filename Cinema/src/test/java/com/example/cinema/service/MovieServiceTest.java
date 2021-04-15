@@ -9,10 +9,12 @@ import com.example.cinema.model.dbModel.ProjectionDB;
 import com.example.cinema.model.requestModel.MovieUpdateReq;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalTime;
@@ -25,16 +27,18 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class MovieServiceTest {
 
-    @Autowired
-    MoviesService moviesService;
-
-    @MockBean
+    @Mock
     MoviesMapper moviesMapper;
 
-    @MockBean
+    @Mock
     GenreService genreService;
+
+    @InjectMocks
+    MoviesService moviesService;
+
 
     @Test
     void findTime() {
@@ -75,9 +79,10 @@ class MovieServiceTest {
 //    void insert() {
 //        MovieReq movieReq = new MovieReq();
 //        movieReq.setId(10);
-//        doNothing().when(moviesMapper).insert(moviesService.makeDBModel(movieReq));
+//        MovieDB movieDB = moviesService.makeDBModel(movieReq);
+//        mock(MoviesService.class).makeDBModel(movieReq);
 //        moviesService.insert(movieReq);
-//        Assert.assertEquals(movieReq.getId(), moviesService.insert(movieReq));
+//        verify(moviesMapper,times(1)).insert(movieDB);
 //    }
 
     @Test

@@ -8,7 +8,11 @@ import com.example.cinema.model.responseModel.ProjectionRespone;
 import com.example.cinema.model.responseModel.ProjectionViewResposne;
 import com.example.cinema.service.ProjectionService;
 import com.example.cinema.validator.sequences.RequestValidationSequence;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.ZonedDateTime;
-import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -53,32 +56,45 @@ public class ProjectionsResource {
     }
 
     //get all projections
+    @Operation(summary = "Get all projections")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "All projections",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProjectionRespone.class))}),
+            @ApiResponse(responseCode = "204", description = "Table empty",
+                    content = @Content)})
     @GetMapping("/all")
-    @ApiOperation(value = "Getting all projections",
-            response = LinkedList.class)
     public List<ProjectionRespone> getAll() {
         return projectionService.getAll();
 
     }
 
     //insert new projection
+    @Operation(summary = "Insert new projection")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "The projection is inserted into table projections.",
+                    content = @Content),
+            @ApiResponse(responseCode = "400", description = "Data you inserted is not valid",
+                    content = @Content),
+            @ApiResponse(responseCode = "409", description = "The time you want for your projection is in use.",
+                    content = @Content)
+    })
     @PostMapping("/insert")
     @ResponseBody
-    @ApiOperation(value = "Inserting new projection")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "The projection is inserted into table projections."),
-            @ApiResponse(code = 409, message = "Data you used is not acceptable")})
-    public ResponseEntity<Object> insert(@RequestBody @Validated(RequestValidationSequence.class)
-                                         @ApiParam(value = "Projection that has all objects", required = true,
-                                                 examples = @Example(
-                                                         value = {
-                                                                 @ExampleProperty(value = "{'date': '2021-04-16'}", mediaType = "application/json")
-                                                         })) ProjectionReq projectionReq) {
+    public ResponseEntity<Object> insert(@RequestBody @Validated(RequestValidationSequence.class) ProjectionReq projectionReq) {
         projectionService.insert(projectionReq);
         return handleInsertInProjections();
     }
 
-    //When we update some of variables
+    @Operation(summary = "Update projection")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202", description = "The projection is updated.",
+                    content = @Content),
+            @ApiResponse(responseCode = "400", description = "Data you inserted is not valid",
+                    content = @Content),
+            @ApiResponse(responseCode = "409", description = "The time you want for your projection is in use.",
+                    content = @Content)
+    })
     @PutMapping("/update")
     @ResponseBody
     public ResponseEntity<Object> update(@RequestBody @Validated(RequestValidationSequence.class) ProjectionUpdateReq projection) {
@@ -86,7 +102,13 @@ public class ProjectionsResource {
         return handleUpdateInProjections();
     }
 
-    //filter projections by movie name and optionally date
+    @Operation(summary = "Filter your projects with name and date")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get all projections",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProjectionViewResposne.class))}),
+            @ApiResponse(responseCode = "204", description = "Table empty",
+                    content = @Content)})
     @GetMapping("/filter")
     public List<ProjectionViewResposne> getSelected(@RequestBody @Valid FilterReq filterReq) {
         return projectionService.getSelected(filterReq);

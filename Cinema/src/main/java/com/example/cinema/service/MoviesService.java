@@ -49,11 +49,12 @@ public class MoviesService {
             return fromDBListToResponseList(list);
     }
 
-    public void insert(MovieReq movieReq) {
+    public boolean insert(MovieReq movieReq) {
         MovieDB movieDB = makeDBModel(movieReq);
         moviesMapper.insert(movieDB);
         InitService.setMovieLastId(moviesMapper.getLastId());
         InitService.setMovieNames(moviesMapper.getAllNames());
+        return true;
     }
 
     public MovieDB makeDBModel(MovieReq movieReq) {

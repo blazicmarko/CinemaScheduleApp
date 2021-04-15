@@ -1,8 +1,16 @@
 package com.example.cinema.model.responseModel;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class HallResponse {
+    @Schema(description = "Unique identifier of the Hall.",
+            example = "1")
     private Integer id;
+    @Schema(description = "Name of the Hall.",
+            example = "Sala 1")
     private String name;
+    @Schema(description = "Identifier of Cinema of the Hall.",
+            example = "1")
     private Integer idCinema;
 
 

@@ -1,23 +1,19 @@
 package com.example.cinema;
 
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Collections;
 
 
 @MapperScan("com.example.cinema.mapper")
 @SpringBootApplication
-@EnableSwagger2
 public class CinemaApplication {
 
 
@@ -27,27 +23,15 @@ public class CinemaApplication {
     }
 
     @Bean
-    public Docket swaggerConfiguration() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.example.cinema.resource"))
-                .build()
-                .useDefaultResponseMessages(false)
-                .directModelSubstitute(LocalDate.class, String.class)
-                .directModelSubstitute(LocalTime.class, String.class)
-                .apiInfo(apiDetails());
+    public OpenAPI customOpenAPI(@Value("Cinema application for reserving projections") String appDesciption, @Value("1.0") String appVersion) {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Cinema application")
+                        .version(appVersion)
+                        .description(appDesciption)
+                        .contact(new Contact().email("mblazic96@gmail.com").name("Marko Blazic").url("https://github.com/blazicmarko"))
+                        .termsOfService("http://swagger.io/terms/")
+                        .license(new License().name("Apache 2.0").url("http://springdoc.org")));
     }
 
-    private ApiInfo apiDetails() {
-        return new ApiInfo(
-                "Cinema reservations API",
-                "Sample API for Cinema reservations",
-                "1.0",
-                "Free to use",
-                new springfox.documentation.service.Contact("Marko Blazic", "https://www.github.com/blazicmarko", "mblaizc96@gmail.com"),
-                "API License",
-                "http://javabrains.io",
-                Collections.emptyList()
-        );
-    }
 }

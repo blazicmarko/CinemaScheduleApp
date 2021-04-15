@@ -6,8 +6,7 @@ import com.example.cinema.validator.ValidTime;
 import com.example.cinema.validator.groups.FirstPriorGroup;
 import com.example.cinema.validator.groups.SecondPriorGroup;
 import com.example.cinema.validator.groups.ThirdPriorGroup;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.Valid;
 import javax.validation.constraints.FutureOrPresent;
@@ -16,23 +15,33 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Valid
-@ApiModel(description = "Details about projection. Model for database table.")
+@Schema(name = "ProjectionReq")
 public class ProjectionReq {
 
-    @ApiModelProperty(dataType = "Integer.class", notes = "Unique identifier of projection", value = "2", example = "1")
+    @NotNull
+    @Schema(description = "Unique identifier of the Projection.",
+            example = "1")
     private Integer id;
     @NotNull(groups = FirstPriorGroup.class)
     @ValidIdMovie(groups = SecondPriorGroup.class)
+    @Schema(description = "Unique identifier of the Movie for Projection you are inserting.",
+            example = "1", required = true)
     private Integer idMovie;
     @NotNull(groups = FirstPriorGroup.class)
     @ValidIdHall(groups = SecondPriorGroup.class)
+    @Schema(description = "Unique identifier of the Hall in witch you are projecting.",
+            example = "1", required = true)
     private Integer idHall;
     @NotNull(groups = FirstPriorGroup.class)
     @FutureOrPresent(groups = SecondPriorGroup.class)
+    @Schema(description = "Date of the projection must be in present or future.", required = true)
     private LocalDate date;
     @NotNull(groups = FirstPriorGroup.class)
     @ValidTime(groups = ThirdPriorGroup.class)
+    @Schema(description = "Time of the projection must be between 8 and 20h because of working hours of Cinema.",
+            example = "14:00:00", required = true, implementation = String.class)
     private LocalTime startTime;
+    @Schema(implementation = String.class, description = "Program implements end time", example = "Program implements end time")
     private LocalTime endTime;
 
     public ProjectionReq() {
