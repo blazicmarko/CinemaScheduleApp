@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.example.cinema.CinemaApplication.getLogger;
+
 @RestController
 @RequestMapping("/rest/genres")
 public class GenresResource {
@@ -33,6 +35,7 @@ public class GenresResource {
                     content = @Content)})
     @GetMapping("/all")
     public List<GenreResponse> getAll() {
+        getLogger().info("Getting all genres.");
         return genresService.findAll();
     }
 }

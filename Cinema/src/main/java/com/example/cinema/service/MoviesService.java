@@ -18,6 +18,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.cinema.CinemaApplication.getLogger;
+
 @Service
 public class MoviesService {
 
@@ -36,6 +38,7 @@ public class MoviesService {
     public LocalTime findTime(ProjectionDB projection) {
         LocalTime time = moviesMapper.findTime(projection);
         if (time == null) {
+            getLogger().error("NoIdException thrown in getTime method. Movie with id:" + projection.getId() + " doesn't exists.");
             throw new NoIdException("There is no Movie with ID you inserted.");
         } else
             return time;
@@ -44,6 +47,7 @@ public class MoviesService {
     public List<MovieResponse> findAll() {
         List<MovieDB> list = moviesMapper.findAll();
         if (list == null) {
+            getLogger().error("TableEmptyException thrown in findAll method.");
             throw new TableEmptyException("No movie with that name in table");
         } else
             return fromDBListToResponseList(list);
@@ -93,6 +97,7 @@ public class MoviesService {
     public List<MovieResponse> getByName(String name) {
         List<MovieDB> list = moviesMapper.getByName(name);
         if (list == null) {
+            getLogger().error("TableEmptyException thrown in getByName method.");
             throw new TableEmptyException("No movie with that name in table");
         } else
             return fromDBListToResponseList(list);
@@ -101,10 +106,12 @@ public class MoviesService {
     public List<MovieResponse> getByGenre(String genre) {
         Integer idGenre = genreService.getGenreIdByName(genre);
         if (idGenre == null) {
+            getLogger().error("WrongGenreNameException thrown in getByGenre method. Genre with name " + genre + " doesn't exists");
             throw new WrongGenreNameException("There is no genre with that name!");
         } else {
             List<MovieDB> list = moviesMapper.getByGenre(idGenre);
             if (list == null) {
+                getLogger().error("TableEmptyException thrown in getByGenre method.");
                 throw new TableEmptyException("No movie with that name in table");
             } else {
                 return fromDBListToResponseList(list);

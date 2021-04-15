@@ -20,6 +20,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.cinema.CinemaApplication.getLogger;
+
 @Service
 public class ProjectionService {
 
@@ -42,9 +44,12 @@ public class ProjectionService {
         Integer numOfProjections;
         numOfProjections = projectionsMapper.isFreeToInsert(projectionDB);
         if (numOfProjections == 0) {
+            getLogger().debug("DB operation insert:");
             projectionsMapper.insert(projectionDB);
             return true;
         } else {
+            getLogger().error("AppointmentCheckException thrown for time :" + projectionDB.getStartTime().toString() +
+                    " and date :" + projectionDB.getDate().toString() + ".");
             String message = getListOfFreeHalls(projectionDB);
             throw new AppointmentCheckException(message);
         }
@@ -61,16 +66,10 @@ public class ProjectionService {
     }
 
     public List<ProjectionRespone> getAll() {
+        getLogger().debug("DB operation select all:");
         List<ProjectionDB> list = projectionsMapper.findAll();
         if (list.isEmpty()) {
-            throw new TableEmptyException("Table projections is empty");
-        } else
-            return fromDBListToResponseList(list);
-    }
-
-    public List<ProjectionRespone> getFirst() {
-        List<ProjectionDB> list = projectionsMapper.findFirst();
-        if (list.isEmpty()) {
+            getLogger().error("TableEmptyException thrown in getAll method.");
             throw new TableEmptyException("Table projections is empty");
         } else
             return fromDBListToResponseList(list);
@@ -78,6 +77,7 @@ public class ProjectionService {
 
     public boolean update(ProjectionUpdateReq projection) {
         Map<String, String> updateVars = checkForUpdate(projection);
+        getLogger().debug("DB operation update:");
         projectionsMapper.update(updateVars, projection.getId());
         return true;
     }
@@ -87,10 +87,12 @@ public class ProjectionService {
         ProjectionDB oldProjectionDB;
         if (projection.getId() != null) {
             if (projectionsMapper.findOne(projection.getId()) == 0) {
+                getLogger().error("NoIdException thrown in update method because there is no id=" + projection.getId() + " in table.");
                 throw new NoIdException("There is no inserted that id in table projections");
             }
             oldProjectionDB = projectionsMapper.findSpecific(projection.getId());
         } else {
+            getLogger().error("NoIdException thrown in update method because there is no id=" + projection.getId() + " in table.");
             throw new NoIdException("There is no inserted id in your data of projections.");
         }
         if (projection.getDate() != null) {
@@ -117,6 +119,8 @@ public class ProjectionService {
             updateVars.put("endTime", oldProjectionDB.getEndTime().format(dtf));
             return updateVars;
         } else {
+            getLogger().error("AppointmentCheckException thrown for time :" + oldProjectionDB.getStartTime().toString() +
+                    " and date :" + oldProjectionDB.getDate().toString() + ".");
             String message = getListOfFreeHalls(oldProjectionDB);
             throw new AppointmentCheckException(message);
         }
@@ -126,11 +130,14 @@ public class ProjectionService {
     public List<ProjectionViewResposne> getSelected(FilterReq filterReq) {
         List<ProjectionViewResposne> list;
         if (filterReq.getDate() != null) {
+            getLogger().debug("DB opreation select filter with date:");
             list = projectionsMapper.getSelected(filterReq);
         } else {
+            getLogger().debug("DB opreation select filter without date:");
             list = projectionsMapper.getSelectedNoDate(filterReq);
         }
         if (list.isEmpty()) {
+            getLogger().error("TableEmptyException thrown in filter method.");
             throw new TableEmptyException("Table projections is empty");
         } else
             return list;

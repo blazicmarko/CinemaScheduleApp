@@ -94,4 +94,7 @@ public class ProjectionReq {
         this.endTime = endTime;
     }
 
+    public String toString() {
+        return "idMovie :" + getIdMovie() + " idHall :" + getIdHall() + " date :" + getDate() + " startTime: " + getStartTime();
+    }
 }

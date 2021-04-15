@@ -23,9 +23,10 @@ import javax.validation.Valid;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import static com.example.cinema.CinemaApplication.getLogger;
+
 @RestController
 @RequestMapping("/rest/projections")
-
 public class ProjectionsResource {
     private ProjectionService projectionService;
 
@@ -65,6 +66,7 @@ public class ProjectionsResource {
                     content = @Content)})
     @GetMapping("/all")
     public List<ProjectionRespone> getAll() {
+        getLogger().info("Geting all projections.");
         return projectionService.getAll();
 
     }
@@ -83,6 +85,7 @@ public class ProjectionsResource {
     @ResponseBody
     public ResponseEntity<Object> insert(@RequestBody @Validated(RequestValidationSequence.class) ProjectionReq projectionReq) {
         projectionService.insert(projectionReq);
+        getLogger().info("Projection with data " + projectionReq.toString() + " inserted in table.");
         return handleInsertInProjections();
     }
 
@@ -99,6 +102,7 @@ public class ProjectionsResource {
     @ResponseBody
     public ResponseEntity<Object> update(@RequestBody @Validated(RequestValidationSequence.class) ProjectionUpdateReq projection) {
         projectionService.update(projection);
+        getLogger().info("Projection updated with id :" + projection.getId());
         return handleUpdateInProjections();
     }
 
@@ -111,6 +115,7 @@ public class ProjectionsResource {
                     content = @Content)})
     @GetMapping("/filter")
     public List<ProjectionViewResposne> getSelected(@RequestBody @Valid FilterReq filterReq) {
+        getLogger().info("Filter of projections with data movieName : " + filterReq.getMovieName() + " date : " + filterReq.getDate());
         return projectionService.getSelected(filterReq);
     }
 }

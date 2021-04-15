@@ -99,4 +99,8 @@ public class MovieReq {
     public void setIdGenre(Integer idGenre) {
         this.idGenre = idGenre;
     }
+
+    public String toString() {
+        return "name :" + getName() + " grade :" + getGrade() + " time :" + getTime() + " year :" + getYear();
+    }
 }

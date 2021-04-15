@@ -81,7 +81,6 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleNotReadableArgumentValid(HttpMessageNotReadableException e) {
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-
         BasicResponse basicResponse = new BasicResponse(
                 "" + e.getRootCause(),
                 HttpStatus.BAD_REQUEST,

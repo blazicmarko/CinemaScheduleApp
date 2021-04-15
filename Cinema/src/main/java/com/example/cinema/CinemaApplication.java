@@ -5,6 +5,8 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -16,9 +18,13 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class CinemaApplication {
 
+    public static final Logger logger = LogManager.getLogger(CinemaApplication.class.getName());
+
+    public static Logger getLogger() {
+        return logger;
+    }
 
     public static void main(String[] args) {
-
         SpringApplication.run(CinemaApplication.class, args);
     }
 

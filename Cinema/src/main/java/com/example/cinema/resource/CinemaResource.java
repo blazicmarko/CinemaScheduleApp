@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.example.cinema.CinemaApplication.getLogger;
+
 @RestController
 @RequestMapping("/rest/cinema")
 public class CinemaResource {
@@ -33,6 +35,7 @@ public class CinemaResource {
                     content = @Content)})
     @GetMapping("/all")
     public List<CinemaResponse> getAll() {
+        getLogger().info("Getting all cinemas.");
         return cinemaService.findAll();
     }
 }

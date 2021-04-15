@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import static com.example.cinema.CinemaApplication.getLogger;
+
 @RestController
 @RequestMapping("/rest/movies")
 public class MoviesResource {
@@ -60,6 +62,7 @@ public class MoviesResource {
                     content = @Content)})
     @GetMapping("/all")
     public List<MovieResponse> getAll() {
+        getLogger().info("Getting all movies.");
         return moviesService.findAll();
     }
 
@@ -72,6 +75,7 @@ public class MoviesResource {
                     content = @Content)})
     @GetMapping("/findMovieByName")
     public List<MovieResponse> getByName(@RequestBody String name) {
+        getLogger().info("Filter of movies with movie name " + name);
         return moviesService.getByName(name);
     }
 
@@ -87,6 +91,7 @@ public class MoviesResource {
     })
     @GetMapping("/findMoviesByGenre")
     public List<MovieResponse> getByGenre(@RequestBody String genre) {
+        getLogger().info("Filter of movies with genre " + genre);
         return moviesService.getByGenre(genre);
     }
 
@@ -100,6 +105,7 @@ public class MoviesResource {
     @PostMapping("/insert")
     public ResponseEntity<Object> insert(@RequestBody @Validated(RequestValidationSequence.class) MovieReq movieReq) {
         moviesService.insert(movieReq);
+        getLogger().info("Movie with data " + movieReq.toString() + " inserted in table.");
         return handleInsertInMovies();
     }
 
@@ -112,6 +118,7 @@ public class MoviesResource {
     })
     @PutMapping("/update")
     public ResponseEntity<Object> update(@RequestBody @Validated(RequestValidationSequence.class) MovieUpdateReq movie) {
+        getLogger().info("Movie with id =" + movie.getId() + " updated.");
         moviesService.update(movie);
         return handleUpdateInMovies();
     }

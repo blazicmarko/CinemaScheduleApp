@@ -28,6 +28,7 @@ public interface ProjectionsMapper {
     @Update(ProjectionQuery.UPDATE)
     Boolean update(@Param("vars") Map<String, String> vars, @Param("id") Integer id);
 
+
     @Select(ProjectionQuery.GET_SELECTED)
     List<ProjectionViewResposne> getSelected(FilterReq filterReq);
 
