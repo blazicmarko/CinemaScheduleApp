@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,11 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.example.cinema.CinemaApplication.getLogger;
-
 @RestController
 @RequestMapping("/rest/cinema")
 public class CinemaResource {
+    public static Logger logger = LogManager.getLogger(CinemaResource.class.getName());
+
+    private Logger getLogger() {
+        return logger;
+    }
+
+
     private CinemaService cinemaService;
 
     @Autowired

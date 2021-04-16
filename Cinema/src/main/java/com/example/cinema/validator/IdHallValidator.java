@@ -1,15 +1,19 @@
 package com.example.cinema.validator;
 
 import com.example.cinema.service.InitService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static com.example.cinema.CinemaApplication.getLogger;
-
 public class IdHallValidator implements ConstraintValidator<ValidIdHall, Integer> {
     private String format;
+    public static Logger logger = LogManager.getLogger(IdHallValidator.class.getName());
 
+    private Logger getLogger() {
+        return logger;
+    }
 
     @Override
     public void initialize(ValidIdHall validIdHall) {
@@ -17,7 +21,7 @@ public class IdHallValidator implements ConstraintValidator<ValidIdHall, Integer
     }
 
     @Override
-public boolean isValid(Integer value, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Integer value, ConstraintValidatorContext constraintValidatorContext) {
         if (value == null) {
             return true;
         }

@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +22,15 @@ import org.springframework.web.bind.annotation.*;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static com.example.cinema.CinemaApplication.getLogger;
-
 @RestController
 @RequestMapping("/rest/movies")
 public class MoviesResource {
+    public static Logger logger = LogManager.getLogger(MoviesResource.class.getName());
+
+    private Logger getLogger() {
+        return logger;
+    }
+
     private MoviesService moviesService;
 
     @Autowired
