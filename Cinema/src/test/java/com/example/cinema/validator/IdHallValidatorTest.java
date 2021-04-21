@@ -38,7 +38,7 @@ public class IdHallValidatorTest {
     }
 
     @Test
-    public void isValidOutOfBound(){
+    public void isValidOutOfBound() {
         when(InitService.getHallLastId()).thenReturn(10);
         Assert.assertFalse(hallValidator.isValid(11, null));
     }

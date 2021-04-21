@@ -1,7 +1,8 @@
 package com.example.cinema.resource;
 
-import com.example.cinema.model.dbModel.MovieDB;
+import com.example.cinema.model.requestModel.MovieReq;
 import com.example.cinema.model.requestModel.MovieUpdateReq;
+import com.example.cinema.model.responseModel.MovieResponse;
 import com.example.cinema.service.MoviesService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -28,32 +29,32 @@ class MoviesResourceTest {
 
     @Test
     void getAllRightData() {
-        List<MovieDB> list = new LinkedList<>();
-        list.add(new MovieDB());
+        List<MovieResponse> list = new LinkedList<>();
+        list.add(new MovieResponse());
         when(service.findAll()).thenReturn(list);
         Assert.assertEquals(resource.getAll(), list);
     }
 
     @Test
     void getByNameRightData() {
-        List<MovieDB> list = new LinkedList<>();
-        list.add(new MovieDB());
+        List<MovieResponse> list = new LinkedList<>();
+        list.add(new MovieResponse());
         when(service.getByName("Matrix")).thenReturn(list);
         Assert.assertEquals(resource.getByName("Matrix"), list);
     }
 
     @Test
     void getByGenreRightData() {
-        List<MovieDB> list = new LinkedList<>();
-        list.add(new MovieDB());
+        List<MovieResponse> list = new LinkedList<>();
+        list.add(new MovieResponse());
         when(service.getByGenre("Crime")).thenReturn(list);
         Assert.assertEquals(resource.getByGenre("Crime"), list);
     }
 
     @Test
     void insertRightData() {
-        MovieDB movie = new MovieDB();
-        doNothing().when(service).insert(movie);
+        MovieReq movie = new MovieReq();
+        when(service.insert(movie)).thenReturn(true);
         Assert.assertEquals(resource.insert(movie).getStatusCode(), MoviesResource.handleInsertInMovies().getStatusCode());
         verify(service, times(1)).insert(movie);
 

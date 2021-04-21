@@ -1,11 +1,19 @@
-package com.example.cinema.model.dbModel;
+package com.example.cinema.model.responseModel;
 
-public class CinemaDB {
+import io.swagger.v3.oas.annotations.media.Schema;
+
+public class CinemaResponse {
+    @Schema(description = "Unique identifier of the Cinema.",
+            example = "1")
     private Integer id;
+    @Schema(description = "Name of the Cinema.",
+            example = "Cineplexx")
     private String name;
+    @Schema(description = "Address of the Cinema.",
+            example = "Usce shopping center")
     private String addres;
 
-    public CinemaDB() {
+    public CinemaResponse() {
     }
 
     public Integer getId() {

@@ -6,6 +6,7 @@ import com.example.cinema.exception.TableEmptyException;
 import com.example.cinema.mapper.ProjectionsMapper;
 import com.example.cinema.model.dbModel.ProjectionDB;
 import com.example.cinema.model.requestModel.FilterReq;
+import com.example.cinema.model.requestModel.ProjectionReq;
 import com.example.cinema.model.requestModel.ProjectionUpdateReq;
 import com.example.cinema.model.responseModel.ProjectionViewResposne;
 import org.junit.Assert;
@@ -35,7 +36,8 @@ public class ProjectionServiceTest {
     private ProjectionsMapper mapper;
 
     @MockBean
-    private MoviesService serviceMovie;
+    private MoviesService moviesService;
+
 
     @Test
     public void getRightDataFilter() {
@@ -105,49 +107,52 @@ public class ProjectionServiceTest {
 
         when(mapper.findAll()).thenReturn(list);
 
-        Assert.assertEquals(list, service.getAll());
+        Assert.assertEquals(list.size(), service.getAll().size());
         verify(mapper, times(1)).findAll();
     }
 
     @Test
-    public void getAllReturnEmpty(){
+    public void getAllReturnEmpty() {
         when(mapper.findAll()).thenReturn(new LinkedList<>());
-        Assert.assertThrows(TableEmptyException.class,() -> service.getAll());
+        Assert.assertThrows(TableEmptyException.class, () -> service.getAll());
     }
 
     @Test
-    public void InsertReturningRightData() {
-        ProjectionDB projectionDB = new ProjectionDB();
+    public void insertReturningRightData() {
+        ProjectionReq projectionReq = new ProjectionReq();
+        projectionReq.setId(2);
 
-        when(mapper.insert(projectionDB)).thenReturn(true);
-        Assert.assertEquals(projectionDB, service.insert(projectionDB));
-        verify(mapper, times(1)).insert(projectionDB);
+        when(mapper.isFreeToInsert(any())).thenReturn(0);
+        Assert.assertTrue(service.insert(projectionReq));
+        verify(mapper, times(1)).insert(any());
     }
 
     @Test
-    public void InsertThrowAppointmentCheck() {
-        ProjectionDB projectionDB = new ProjectionDB();
-        when(mapper.isFreeToInsert(projectionDB)).thenReturn(1);
-        Assert.assertThrows(AppointmentCheckException.class, () -> service.insert(projectionDB));
+    public void insertThrowAppointmentCheck() {
+        ProjectionReq projectionReq = new ProjectionReq();
+        projectionReq.setId(2);
+
+        when(mapper.isFreeToInsert(any())).thenReturn(1);
+        Assert.assertThrows(AppointmentCheckException.class, () -> service.insert(projectionReq));
 
     }
 
     @Test
-    public void UpdateReturningRightData() {
-        ProjectionDB oldProjectionDB = new ProjectionDB();
-        oldProjectionDB.setId(1);
-        oldProjectionDB.setIdMovie(1);
-        oldProjectionDB.setIdHall(1);
-        oldProjectionDB.setDate(LocalDate.of(2021, 7, 13));
-        oldProjectionDB.setStartTime(LocalTime.of(20, 0, 0));
-        oldProjectionDB.setEndTime(LocalTime.of(22, 30, 0));
-        ProjectionDB newProjectionDB = new ProjectionDB();
-        newProjectionDB.setId(1);
-        newProjectionDB.setIdMovie(2);
-        newProjectionDB.setIdHall(2);
-        newProjectionDB.setDate(LocalDate.of(2021, 7, 14));
-        newProjectionDB.setStartTime(LocalTime.of(20, 10, 0));
-        newProjectionDB.setEndTime(LocalTime.of(22, 40, 0));
+    public void updateReturningRightData() {
+        ProjectionDB oldProjectionReq = new ProjectionDB();
+        oldProjectionReq.setId(1);
+        oldProjectionReq.setIdMovie(1);
+        oldProjectionReq.setIdHall(1);
+        oldProjectionReq.setDate(LocalDate.of(2021, 7, 13));
+        oldProjectionReq.setStartTime(LocalTime.of(20, 0, 0));
+        oldProjectionReq.setEndTime(LocalTime.of(22, 30, 0));
+        ProjectionReq newProjectionReq = new ProjectionReq();
+        newProjectionReq.setId(1);
+        newProjectionReq.setIdMovie(2);
+        newProjectionReq.setIdHall(2);
+        newProjectionReq.setDate(LocalDate.of(2021, 7, 14));
+        newProjectionReq.setStartTime(LocalTime.of(20, 10, 0));
+        newProjectionReq.setEndTime(LocalTime.of(22, 40, 0));
         ProjectionUpdateReq projection = new ProjectionUpdateReq();
         projection.setId(1);
         projection.setIdMovie(2);
@@ -162,37 +167,37 @@ public class ProjectionServiceTest {
         map.put("id_movie", "2");
         map.put("endTime", "22:30:00");
 
-        when(mapper.findOne(oldProjectionDB.getId())).thenReturn(1);
-        when(mapper.findSpecific(projection.getId())).thenReturn(oldProjectionDB);
-        when(serviceMovie.findTime(oldProjectionDB)).thenReturn(LocalTime.of(2, 30, 0));
-        when(mapper.getEndTime(oldProjectionDB, LocalTime.of(2, 30, 0))).thenReturn(LocalTime.of(22, 40, 0));
-        when(mapper.isFreeToUpdate(oldProjectionDB)).thenReturn(0);
+        when(mapper.findOne(oldProjectionReq.getId())).thenReturn(1);
+        when(mapper.findSpecific(projection.getId())).thenReturn(oldProjectionReq);
+        when(moviesService.findTime(oldProjectionReq)).thenReturn(LocalTime.of(2, 30, 0));
+        when(mapper.getEndTime(oldProjectionReq, LocalTime.of(2, 30, 0))).thenReturn(LocalTime.of(22, 40, 0));
+        when(mapper.isFreeToUpdate(oldProjectionReq)).thenReturn(0);
         when(mapper.update(map, projection.getId())).thenReturn(true);
         Assert.assertTrue(service.update(projection));
     }
 
     @Test
-    public void UpdateReturnNoIdExceptionForNullId() {
+    public void updateReturnNoIdExceptionForNullId() {
         ProjectionUpdateReq projection = new ProjectionUpdateReq();
         Assert.assertThrows(NoIdException.class, () -> service.update(projection));
     }
 
     @Test
-    public void UpdateReturnNoIdExceptionForZeroId() {
+    public void updateReturnNoIdExceptionForZeroId() {
         ProjectionUpdateReq projection = new ProjectionUpdateReq();
         projection.setId(0);
         Assert.assertThrows(NoIdException.class, () -> service.update(projection));
     }
 
     @Test
-    public void UpdateReturnAppointmentCheckException() {
-        ProjectionDB oldProjectionDB = new ProjectionDB();
-        oldProjectionDB.setId(1);
-        oldProjectionDB.setIdMovie(1);
-        oldProjectionDB.setIdHall(1);
-        oldProjectionDB.setDate(LocalDate.of(2021, 7, 13));
-        oldProjectionDB.setStartTime(LocalTime.of(20, 0, 0));
-        oldProjectionDB.setEndTime(LocalTime.of(22, 30, 0));
+    public void updateReturnAppointmentCheckException() {
+        ProjectionDB oldProjectionReq = new ProjectionDB();
+        oldProjectionReq.setId(1);
+        oldProjectionReq.setIdMovie(1);
+        oldProjectionReq.setIdHall(1);
+        oldProjectionReq.setDate(LocalDate.of(2021, 7, 13));
+        oldProjectionReq.setStartTime(LocalTime.of(20, 0, 0));
+        oldProjectionReq.setEndTime(LocalTime.of(22, 30, 0));
         ProjectionUpdateReq projection = new ProjectionUpdateReq();
         projection.setId(1);
         projection.setIdMovie(2);
@@ -201,11 +206,11 @@ public class ProjectionServiceTest {
         projection.setStartTime(LocalTime.of(20, 10, 0));
         projection.setEndTime(LocalTime.of(22, 40, 0));
 
-        when(mapper.findOne(oldProjectionDB.getId())).thenReturn(1);
-        when(mapper.findSpecific(projection.getId())).thenReturn(oldProjectionDB);
-        when(serviceMovie.findTime(oldProjectionDB)).thenReturn(LocalTime.of(2, 30, 0));
-        when(mapper.getEndTime(oldProjectionDB, LocalTime.of(2, 30, 0))).thenReturn(LocalTime.of(22, 40, 0));
-        when(mapper.isFreeToUpdate(oldProjectionDB)).thenReturn(1);
+        when(mapper.findOne(oldProjectionReq.getId())).thenReturn(1);
+        when(mapper.findSpecific(projection.getId())).thenReturn(oldProjectionReq);
+        when(moviesService.findTime(oldProjectionReq)).thenReturn(LocalTime.of(2, 30, 0));
+        when(mapper.getEndTime(oldProjectionReq, LocalTime.of(2, 30, 0))).thenReturn(LocalTime.of(22, 40, 0));
+        when(mapper.isFreeToUpdate(oldProjectionReq)).thenReturn(1);
         Assert.assertThrows(AppointmentCheckException.class, () -> service.update(projection));
     }
 

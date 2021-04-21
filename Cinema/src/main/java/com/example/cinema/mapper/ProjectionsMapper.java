@@ -28,6 +28,7 @@ public interface ProjectionsMapper {
     @Update(ProjectionQuery.UPDATE)
     Boolean update(@Param("vars") Map<String, String> vars, @Param("id") Integer id);
 
+
     @Select(ProjectionQuery.GET_SELECTED)
     List<ProjectionViewResposne> getSelected(FilterReq filterReq);
 
@@ -35,10 +36,10 @@ public interface ProjectionsMapper {
     List<ProjectionViewResposne> getSelectedNoDate(FilterReq filterReq);
 
     @Select(ProjectionQuery.IS_FREE_TO_ISNERT)
-    Integer isFreeToInsert(ProjectionDB projectionDB);
+    Integer isFreeToInsert(ProjectionDB projectionReq);
 
     @Select(ProjectionQuery.IS_FREE_TO_UPDATE)
-    Integer isFreeToUpdate(ProjectionDB projectionDB);
+    Integer isFreeToUpdate(ProjectionDB projectionReq);
 
     @Select(ProjectionQuery.GET_END_TIME)
     LocalTime getEndTime(ProjectionDB projection, LocalTime time);
@@ -46,5 +47,6 @@ public interface ProjectionsMapper {
     @Select(ProjectionQuery.FIND_SPECIFIC)
     ProjectionDB findSpecific(Integer id);
 
-
+    @Select(ProjectionQuery.FIND_FIRST)
+    List<ProjectionDB> findFirst();
 }

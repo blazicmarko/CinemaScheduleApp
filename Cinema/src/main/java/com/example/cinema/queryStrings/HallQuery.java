@@ -2,7 +2,7 @@ package com.example.cinema.queryStrings;
 
 public class HallQuery {
 
-    public static final String FIND_ALL = "select * from halls";
+    public static final String FIND_ALL = "select id,name,id_cinema as idCinema from halls";
 
     public static final String FIND_HALL = "select count(*) from halls where id = #{idHall}";
 

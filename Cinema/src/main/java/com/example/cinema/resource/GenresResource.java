@@ -1,7 +1,14 @@
 package com.example.cinema.resource;
 
-import com.example.cinema.mapper.GenresMapper;
-import com.example.cinema.model.dbModel.GenreDB;
+import com.example.cinema.model.responseModel.GenreResponse;
+import com.example.cinema.service.GenreService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,15 +19,30 @@ import java.util.List;
 @RestController
 @RequestMapping("/rest/genres")
 public class GenresResource {
-    private GenresMapper genresMapper;
 
-    @Autowired
-    public GenresResource(GenresMapper genresMapper) {
-        this.genresMapper = genresMapper;
+    public static Logger logger = LogManager.getLogger(GenresResource.class.getName());
+
+    private Logger getLogger() {
+        return logger;
     }
 
+    private GenreService genresService;
+
+    @Autowired
+    public GenresResource(GenreService genresService) {
+        this.genresService = genresService;
+    }
+
+    @Operation(summary = "Get all genres")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "All genres",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = GenreResponse.class))}),
+            @ApiResponse(responseCode = "204", description = "Table empty",
+                    content = @Content)})
     @GetMapping("/all")
-    public List<GenreDB> getAll() {
-        return genresMapper.findAll();
+    public List<GenreResponse> getAll() {
+        getLogger().info("Getting all genres.");
+        return genresService.findAll();
     }
 }

@@ -4,6 +4,9 @@ public class GenreDB {
     private Integer id;
     private String name;
 
+    public GenreDB() {
+    }
+
     public Integer getId() {
         return id;
     }

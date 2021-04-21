@@ -38,7 +38,7 @@ public class IdMovieValidatorTest {
     }
 
     @Test
-    public void isValidOutOfBound(){
+    public void isValidOutOfBound() {
         when(InitService.getMovieLastId()).thenReturn(10);
         Assert.assertFalse(idMovieValidator.isValid(11, null));
     }

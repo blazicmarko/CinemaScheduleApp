@@ -1,8 +1,9 @@
 package com.example.cinema.resource;
 
-import com.example.cinema.model.dbModel.ProjectionDB;
 import com.example.cinema.model.requestModel.FilterReq;
+import com.example.cinema.model.requestModel.ProjectionReq;
 import com.example.cinema.model.requestModel.ProjectionUpdateReq;
+import com.example.cinema.model.responseModel.ProjectionRespone;
 import com.example.cinema.model.responseModel.ProjectionViewResposne;
 import com.example.cinema.service.ProjectionService;
 import org.junit.Assert;
@@ -164,16 +165,16 @@ public class ProjectionResourceTest {
 
     @Test
     public void GetAllRightData() {
-        List<ProjectionDB> list = new LinkedList<>();
-        list.add(new ProjectionDB());
+        List<ProjectionRespone> list = new LinkedList<>();
+        list.add(new ProjectionRespone());
         when(service.getAll()).thenReturn(list);
         Assert.assertEquals(resource.getAll(), list);
     }
 
     @Test
     public void InsertRightData() {
-        ProjectionDB projection = new ProjectionDB();
-        when(service.insert(projection)).thenReturn(projection);
+        ProjectionReq projection = new ProjectionReq();
+        when(service.insert(projection)).thenReturn(true);
         Assert.assertEquals(resource.insert(projection).getStatusCode(), ProjectionsResource.handleInsertInProjections().getStatusCode());
         verify(service, times(1)).insert(projection);
     }
