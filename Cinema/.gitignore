@@ -33,3 +33,6 @@ build/
 .vscode/
 
 /logs
+/.mvn/
+mvnw.cmd
+mvnw
