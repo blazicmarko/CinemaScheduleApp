@@ -26,4 +26,5 @@ public class BasicResponse {
     public ZonedDateTime getTimestamp() {
         return timestamp;
     }
+
 }
