@@ -20,6 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +41,7 @@ public class ProjectionsResource {
 
     private ProjectionService projectionService;
 
-    private static final String TOPIC = "projection_live";
+    private static final String TOPIC = "projection_change";
     private KafkaTemplate<String, ProjectionKafka> kafkaTemplate;
 
     @Autowired
@@ -98,7 +101,7 @@ public class ProjectionsResource {
         ProjectionKafka projectionKafka = projectionService.insert(projectionReq);
         getLogger().info("Projection with data " + projectionReq.toString() + " inserted in table.");
         if (projectionKafka != null)
-            kafkaTemplate.send(TOPIC, projectionKafka);
+            sendMessage(projectionKafka);
         return handleInsertInProjections();
     }
 
@@ -116,8 +119,8 @@ public class ProjectionsResource {
     public ResponseEntity<Object> update(@RequestBody @Validated(RequestValidationSequence.class) ProjectionUpdateReq projection) {
         ProjectionKafka projectionKafka = projectionService.update(projection);
         getLogger().info("Projection updated with id :" + projection.getId());
-        if (projectionKafka != null || kafkaTemplate.)
-            kafkaTemplate.send(TOPIC, projectionKafka);
+        if (projectionKafka != null)
+            sendMessage(projectionKafka);
         return handleUpdateInProjections();
     }
 
@@ -132,5 +135,26 @@ public class ProjectionsResource {
     public List<ProjectionViewResposne> getSelected(@RequestBody @Valid FilterReq filterReq) {
         getLogger().info("Filter of projections with data movieName : " + filterReq.getMovieName() + " date : " + filterReq.getDate());
         return projectionService.getSelected(filterReq);
+    }
+
+    public void sendMessage(ProjectionKafka projectionKafka) {
+
+        ListenableFuture<SendResult<String, ProjectionKafka>> future =
+                kafkaTemplate.send(TOPIC, projectionKafka);
+
+        future.addCallback(new ListenableFutureCallback<SendResult<String, ProjectionKafka>>() {
+
+            @Override
+            public void onSuccess(SendResult<String, ProjectionKafka> stringProjectionKafkaSendResult) {
+                logger.info("Sent message=[" + projectionKafka.getId().toString() +
+                        "] with offset=[" + stringProjectionKafkaSendResult.getRecordMetadata().offset() + "]");
+            }
+
+            @Override
+            public void onFailure(Throwable ex) {
+                logger.info("Unable to send message=["
+                        + projectionKafka.getId().toString() + "] due to : " + ex.getMessage());
+            }
+        });
     }
 }
