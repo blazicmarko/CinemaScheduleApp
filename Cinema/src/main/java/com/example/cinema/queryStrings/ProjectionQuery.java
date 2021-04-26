@@ -9,6 +9,11 @@ public class ProjectionQuery {
     public static final String INSERT = "insert into projections(date, startTime, endTime, id_hall, id_movie)" +
             "values (#{date}, #{startTime}, #{endTime}, #{idHall}, #{idMovie})";
 
+    public static final String GET_LAST_ID = "select id " +
+            "from projections " +
+            "order by id DESC " +
+            "limit 1";
+
     public static final String UPDATE = "<script> " +
             "update projections set " +
             "<foreach item = 'item' index = 'index' collection = 'vars' separator =','> " +

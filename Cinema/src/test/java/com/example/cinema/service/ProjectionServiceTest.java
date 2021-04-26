@@ -123,7 +123,7 @@ public class ProjectionServiceTest {
         projectionReq.setId(2);
 
         when(mapper.isFreeToInsert(any())).thenReturn(0);
-        Assert.assertTrue(service.insert(projectionReq));
+        Assert.assertEquals(service.insert(projectionReq).getId(), projectionReq.getId());
         verify(mapper, times(1)).insert(any());
     }
 
@@ -173,7 +173,7 @@ public class ProjectionServiceTest {
         when(mapper.getEndTime(oldProjectionReq, LocalTime.of(2, 30, 0))).thenReturn(LocalTime.of(22, 40, 0));
         when(mapper.isFreeToUpdate(oldProjectionReq)).thenReturn(0);
         when(mapper.update(map, projection.getId())).thenReturn(true);
-        Assert.assertTrue(service.update(projection));
+        Assert.assertEquals(service.update(projection).getId(), projection.getId());
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.example.cinema.resource;
 
+import com.example.cinema.model.kafkaModel.ProjectionKafka;
 import com.example.cinema.model.requestModel.FilterReq;
 import com.example.cinema.model.requestModel.ProjectionReq;
 import com.example.cinema.model.requestModel.ProjectionUpdateReq;
@@ -18,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,9 +38,13 @@ public class ProjectionsResource {
 
     private ProjectionService projectionService;
 
+    private static final String TOPIC = "projection_live";
+    private KafkaTemplate<String, ProjectionKafka> kafkaTemplate;
+
     @Autowired
-    public ProjectionsResource(ProjectionService projectionService) {
+    public ProjectionsResource(ProjectionService projectionService, KafkaTemplate kafkaTemplate) {
         this.projectionService = projectionService;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public static ResponseEntity<Object> handleUpdateInProjections() {
@@ -74,7 +80,6 @@ public class ProjectionsResource {
     public List<ProjectionRespone> getAll() {
         getLogger().info("Geting all projections.");
         return projectionService.getAll();
-
     }
 
     //insert new projection
@@ -90,8 +95,10 @@ public class ProjectionsResource {
     @PostMapping("/insert")
     @ResponseBody
     public ResponseEntity<Object> insert(@RequestBody @Validated(RequestValidationSequence.class) ProjectionReq projectionReq) {
-        projectionService.insert(projectionReq);
+        ProjectionKafka projectionKafka = projectionService.insert(projectionReq);
         getLogger().info("Projection with data " + projectionReq.toString() + " inserted in table.");
+        if (projectionKafka != null)
+            kafkaTemplate.send(TOPIC, projectionKafka);
         return handleInsertInProjections();
     }
 
@@ -107,8 +114,10 @@ public class ProjectionsResource {
     @PutMapping("/update")
     @ResponseBody
     public ResponseEntity<Object> update(@RequestBody @Validated(RequestValidationSequence.class) ProjectionUpdateReq projection) {
-        projectionService.update(projection);
+        ProjectionKafka projectionKafka = projectionService.update(projection);
         getLogger().info("Projection updated with id :" + projection.getId());
+        if (projectionKafka != null || kafkaTemplate.)
+            kafkaTemplate.send(TOPIC, projectionKafka);
         return handleUpdateInProjections();
     }
 
