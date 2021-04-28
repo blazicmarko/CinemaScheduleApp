@@ -5,6 +5,7 @@ import com.example.cinema.exception.NoIdException;
 import com.example.cinema.exception.TableEmptyException;
 import com.example.cinema.mapper.ProjectionsMapper;
 import com.example.cinema.model.dbModel.ProjectionDB;
+import com.example.cinema.model.kafkaModel.ProjectionKafka;
 import com.example.cinema.model.requestModel.FilterReq;
 import com.example.cinema.model.requestModel.ProjectionReq;
 import com.example.cinema.model.requestModel.ProjectionUpdateReq;
@@ -33,6 +34,15 @@ public class ProjectionService {
     private ProjectionsMapper projectionsMapper;
     private MoviesService moviesService;
     private HallsService hallsService;
+    private ProjectionDB oldProjectionDB;
+
+    public ProjectionDB getOldProjectionDB() {
+        return oldProjectionDB;
+    }
+
+    public void setOldProjectionDB(ProjectionDB oldProjectionDB) {
+        this.oldProjectionDB = oldProjectionDB;
+    }
 
     @Autowired
     public ProjectionService(ProjectionsMapper projectionsMapper, HallsService hallsService, MoviesService moviesService) {
@@ -41,7 +51,7 @@ public class ProjectionService {
         this.hallsService = hallsService;
     }
 
-    public boolean insert(ProjectionReq projectionReq) {
+    public ProjectionKafka insert(ProjectionReq projectionReq) {
         ProjectionDB projectionDB = makeDBModel(projectionReq);
         getLogger().debug("Seting endTime of projection.");
         LocalTime movieTime = moviesService.findTime(projectionDB);
@@ -55,7 +65,7 @@ public class ProjectionService {
             getLogger().debug("Check passed.");
             getLogger().debug("DB operation insert:");
             projectionsMapper.insert(projectionDB);
-            return true;
+            return formDBtoKafka(projectionDB);
         } else {
             getLogger().error("AppointmentCheckException thrown for time :" + projectionDB.getStartTime().toString() +
                     " and date :" + projectionDB.getDate().toString() + ".");
@@ -84,11 +94,11 @@ public class ProjectionService {
             return fromDBListToResponseList(list);
     }
 
-    public boolean update(ProjectionUpdateReq projection) {
+    public ProjectionKafka update(ProjectionUpdateReq projection) {
         Map<String, String> updateVars = checkForUpdate(projection);
         getLogger().debug("DB operation update:");
         projectionsMapper.update(updateVars, projection.getId());
-        return true;
+        return formDBtoKafka(getOldProjectionDB());
     }
 
     public Map<String, String> checkForUpdate(ProjectionUpdateReq projection) {
@@ -132,6 +142,7 @@ public class ProjectionService {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
             updateVars.put("endTime", oldProjectionDB.getEndTime().format(dtf));
             getLogger().debug("Check passed(update).");
+            setOldProjectionDB(oldProjectionDB);
             return updateVars;
         } else {
             getLogger().error("AppointmentCheckException thrown for time :" + oldProjectionDB.getStartTime().toString() +
@@ -194,5 +205,19 @@ public class ProjectionService {
             responseList.add(fromDBtoResponse(projectionDB));
         }
         return responseList;
+    }
+
+    public ProjectionKafka formDBtoKafka(ProjectionDB projectionDB) {
+        ProjectionKafka projectionKafka = new ProjectionKafka();
+        if (projectionDB.getId() == null)
+            projectionKafka.setId(projectionsMapper.getLastId());
+        else
+            projectionKafka.setId(projectionDB.getId());
+        projectionKafka.setIdMovie(projectionDB.getIdMovie());
+        projectionKafka.setIdHall(projectionDB.getIdHall());
+        projectionKafka.setDate(projectionDB.getDate());
+        projectionKafka.setStartTime(projectionDB.getStartTime());
+        projectionKafka.setEndTime(projectionDB.getEndTime());
+        return projectionKafka;
     }
 }

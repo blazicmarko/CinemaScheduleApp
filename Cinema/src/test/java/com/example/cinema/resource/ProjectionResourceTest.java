@@ -1,5 +1,6 @@
 package com.example.cinema.resource;
 
+import com.example.cinema.model.kafkaModel.ProjectionKafka;
 import com.example.cinema.model.requestModel.FilterReq;
 import com.example.cinema.model.requestModel.ProjectionReq;
 import com.example.cinema.model.requestModel.ProjectionUpdateReq;
@@ -174,7 +175,7 @@ public class ProjectionResourceTest {
     @Test
     public void InsertRightData() {
         ProjectionReq projection = new ProjectionReq();
-        when(service.insert(projection)).thenReturn(true);
+        when(service.insert(projection)).thenReturn(new ProjectionKafka());
         Assert.assertEquals(resource.insert(projection).getStatusCode(), ProjectionsResource.handleInsertInProjections().getStatusCode());
         verify(service, times(1)).insert(projection);
     }
@@ -182,7 +183,7 @@ public class ProjectionResourceTest {
     @Test
     public void UpdateRightData() {
         ProjectionUpdateReq projection = new ProjectionUpdateReq();
-        when(service.update(projection)).thenReturn(true);
+        when(service.update(projection)).thenReturn(new ProjectionKafka());
         Assert.assertEquals(resource.update(projection).getStatusCode(), ProjectionsResource.handleUpdateInProjections().getStatusCode());
         verify(service, times(1)).update(projection);
     }
