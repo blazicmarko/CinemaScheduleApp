@@ -1,5 +1,6 @@
 package com.example.cinema.service;
 
+import com.example.cinema.exception.AppointmentCheckException;
 import com.example.cinema.exception.NoIdException;
 import com.example.cinema.exception.TableEmptyException;
 import com.example.cinema.exception.WrongGenreNameException;
@@ -9,11 +10,18 @@ import com.example.cinema.model.dbModel.ProjectionDB;
 import com.example.cinema.model.requestModel.MovieReq;
 import com.example.cinema.model.requestModel.MovieUpdateReq;
 import com.example.cinema.model.responseModel.MovieResponse;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -60,12 +68,86 @@ public class MoviesService {
     }
 
     public boolean insert(MovieReq movieReq) {
+        String id = getMovieIdFromIMDB(movieReq.getName(), movieReq.getYear());
+        movieReq=setMovieReqParameters(id);
         MovieDB movieDB = makeDBModel(movieReq);
         getLogger().debug("DB operation insert:");
         moviesMapper.insert(movieDB);
         InitService.setMovieLastId(moviesMapper.getLastId());
         InitService.setMovieNames(moviesMapper.getAllNames());
         return true;
+    }
+
+    private MovieReq setMovieReqParameters(String id) {
+        MovieReq movieReq = new MovieReq();
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url("https://imdb8.p.rapidapi.com/title/get-overview-details?tconst="+id)
+                .get()
+                .addHeader("x-rapidapi-key", "12612cde3bmsh298efe426be3e2ep189dccjsn80c649d00c00")
+                .addHeader("x-rapidapi-host", "imdb8.p.rapidapi.com")
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            String jsonData = response.body().string();
+            JSONObject Jobject = new JSONObject(jsonData);
+            movieReq.setName((String)((JSONObject)Jobject.get("title")).get("title"));
+            movieReq.setYear((Integer)((JSONObject)Jobject.get("title")).get("year"));
+            movieReq.setTime(LocalTime.of((int)((JSONObject)Jobject.get("title")).get("runningTimeInMinutes")/60, (int)((JSONObject)Jobject.get("title")).get("runningTimeInMinutes")%60,0));
+            movieReq.setGrade((double)((JSONObject)Jobject.get("ratings")).get("rating"));
+            String genre =(String)Jobject.getJSONArray("genres").get(0);
+            movieReq.setIdGenre(genreService.getGenreIdByName(genre));
+        }
+        catch (IOException | JSONException e){
+        }
+        return movieReq;
+    }
+
+    private String getMovieIdFromIMDB(String name,Integer year) {
+        String movieNameUrl;
+        movieNameUrl=name;
+        movieNameUrl.replaceAll(" ","%20");
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url("https://imdb8.p.rapidapi.com/auto-complete?q="+movieNameUrl)
+                .get()
+                .addHeader("x-rapidapi-key", "12612cde3bmsh298efe426be3e2ep189dccjsn80c649d00c00")
+                .addHeader("x-rapidapi-host", "imdb8.p.rapidapi.com")
+                .build();
+        Response response;
+        try{
+            response = client.newCall(request).execute();
+            String jsonData = response.body().string();
+            JSONObject Jobject = new JSONObject(jsonData);
+            JSONArray Jarray = Jobject.getJSONArray("d");
+            int numOfMovies = 0;
+            JSONObject movie = new JSONObject();
+            movie.put("id","");
+            for (int i = 0; i < Jarray.length(); i++) {
+                JSONObject object = Jarray.getJSONObject(i);
+                if(object.get("q").equals("feature")  && ((Integer) object.get("y")).intValue() == year.intValue()) {
+                    movie = object;
+                    numOfMovies++;
+                    getLogger().info(object.toString());
+                }
+            }
+            if(numOfMovies == 0){
+                throw new TableEmptyException("No movie with that name and year in IMDB database");
+            }
+            else if(numOfMovies > 1){
+                throw new AppointmentCheckException("Multiple movies in IDBM database");
+            }
+            else{
+                return movie.get("id").toString();
+            }
+
+        }
+        catch (IOException | JSONException e){
+        }
+        return null;
     }
 
     public MovieDB makeDBModel(MovieReq movieReq) {

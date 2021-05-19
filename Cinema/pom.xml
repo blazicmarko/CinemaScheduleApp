@@ -91,8 +91,15 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>net.minidev</groupId>
-			<artifactId>json-smart</artifactId>
+			<groupId>com.squareup.okhttp</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>2.7.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin.external.google</groupId>
+			<artifactId>android-json</artifactId>
+			<version>0.0.20131108.vaadin1</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 
