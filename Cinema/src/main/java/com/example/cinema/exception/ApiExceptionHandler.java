@@ -56,6 +56,30 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(basicResponse, badRequest);
     }
 
+    @ExceptionHandler(value = {MultipleMovieNameException.class})
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<Object> handleMultipleMovieNameException(MultipleMovieNameException e){
+        HttpStatus badRequest = HttpStatus.CONFLICT;
+        BasicResponse basicResponse = new BasicResponse(
+                e.getMessage(),
+                HttpStatus.CONFLICT,
+                ZonedDateTime.now()
+        );
+        return new ResponseEntity<>(basicResponse, badRequest);
+    }
+
+    @ExceptionHandler(value = {NoMovieNameException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handleNoMovieNameException(NoMovieNameException e){
+        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
+        BasicResponse basicResponse = new BasicResponse(
+                e.getMessage(),
+                HttpStatus.BAD_REQUEST,
+                ZonedDateTime.now()
+        );
+        return new ResponseEntity<>(basicResponse, badRequest);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleNoArgumentValid(MethodArgumentNotValidException e){

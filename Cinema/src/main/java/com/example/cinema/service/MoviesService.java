@@ -1,9 +1,6 @@
 package com.example.cinema.service;
 
-import com.example.cinema.exception.AppointmentCheckException;
-import com.example.cinema.exception.NoIdException;
-import com.example.cinema.exception.TableEmptyException;
-import com.example.cinema.exception.WrongGenreNameException;
+import com.example.cinema.exception.*;
 import com.example.cinema.mapper.MoviesMapper;
 import com.example.cinema.model.dbModel.MovieDB;
 import com.example.cinema.model.dbModel.ProjectionDB;
@@ -69,8 +66,23 @@ public class MoviesService {
 
     public boolean insert(MovieReq movieReq) {
         String id = getMovieIdFromIMDB(movieReq.getName(), movieReq.getYear());
+        if(id == null){
+            throw new NoIdException("Movie name and year doesn't exists");
+        }
         movieReq=setMovieReqParameters(id);
         MovieDB movieDB = makeDBModel(movieReq);
+        getLogger().debug("DB operation insert:");
+        moviesMapper.insert(movieDB);
+        InitService.setMovieLastId(moviesMapper.getLastId());
+        InitService.setMovieNames(moviesMapper.getAllNames());
+        return true;
+    }
+
+    public boolean insertWithId(String imdbId) {
+        MovieReq movieReq = setMovieReqParameters(imdbId);
+        MovieDB movieDB = makeDBModel(movieReq);
+        if(moviesMapper.checkForSameMovie(movieDB))
+            throw new MultipleMovieNameException("There is same movie in database");
         getLogger().debug("DB operation insert:");
         moviesMapper.insert(movieDB);
         InitService.setMovieLastId(moviesMapper.getLastId());
@@ -128,17 +140,20 @@ public class MoviesService {
             movie.put("id","");
             for (int i = 0; i < Jarray.length(); i++) {
                 JSONObject object = Jarray.getJSONObject(i);
-                if(object.get("q").equals("feature")  && ((Integer) object.get("y")).intValue() == year.intValue()) {
-                    movie = object;
-                    numOfMovies++;
-                    getLogger().info(object.toString());
+                String s = (String)object.getString("id");
+                if(s.substring(0,2).equals("tt")) {
+                    if(((Integer) object.get("y")).intValue() == year.intValue()){
+                        movie = object;
+                        numOfMovies++;
+                        getLogger().info(object.toString());
+                    }
                 }
             }
             if(numOfMovies == 0){
-                throw new TableEmptyException("No movie with that name and year in IMDB database");
+                throw new NoMovieNameException("No movie with that name and year in IMDB database");
             }
             else if(numOfMovies > 1){
-                throw new AppointmentCheckException("Multiple movies in IDBM database");
+                throw new MultipleMovieNameException("Multiple movies in IDBM database");
             }
             else{
                 return movie.get("id").toString();
@@ -146,6 +161,7 @@ public class MoviesService {
 
         }
         catch (IOException | JSONException e){
+            getLogger().info("Error IO or JSON exception ");
         }
         return null;
     }
@@ -230,4 +246,6 @@ public class MoviesService {
         }
         return responseList;
     }
+
+
 }

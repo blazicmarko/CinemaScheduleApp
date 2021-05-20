@@ -38,4 +38,10 @@ public class MovieQuery {
 
     public static final String GET_ALL_NAMES = "select name " +
             "from movies";
+
+    public static final String CHECK_MOVIE = "select count(*) " +
+            "from movies "+
+            "where name = '${name}' " +
+            "and year = #{year} " +
+            "and grade = #{grade} ";
 }
