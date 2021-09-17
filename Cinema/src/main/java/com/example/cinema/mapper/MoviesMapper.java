@@ -43,4 +43,7 @@ public interface MoviesMapper {
 
     @Select(MovieQuery.GET_ALL_NAMES)
     List<String> getAllNames();
+
+    @Select(MovieQuery.CHECK_MOVIE)
+    boolean checkForSameMovie(MovieDB movieDB);
 }

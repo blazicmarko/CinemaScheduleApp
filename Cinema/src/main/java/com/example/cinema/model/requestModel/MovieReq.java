@@ -25,7 +25,6 @@ public class MovieReq {
     @Schema(description = "Unique name of the Movie.",
             example = "Matrix")
     private String name;
-    @NotNull(groups = FirstPriorGroup.class)
     @Min(value = 1, groups = SecondPriorGroup.class)
     @Max(value = 10, groups = SecondPriorGroup.class)
     @Schema(description = "Grade of the Movie.",
@@ -37,12 +36,10 @@ public class MovieReq {
     @Schema(description = "Year whe the Movie was created.",
             example = "2005")
     private Integer year;
-    @NotNull(groups = FirstPriorGroup.class)
     @ValidIdGenre(groups = SecondPriorGroup.class)
     @Schema(description = "Identifier of the Genre of Movie.",
             example = "1")
     private Integer idGenre;
-    @NotNull(groups = FirstPriorGroup.class)
     @ValidTime(groups = ThirdPriorGroup.class)
     @Schema(description = "How much does Movie lasts.",
             example = "01:50:00", implementation = String.class)
@@ -101,6 +98,6 @@ public class MovieReq {
     }
 
     public String toString() {
-        return "name :" + getName() + " grade :" + getGrade() + " time :" + getTime() + " year :" + getYear();
+        return "name :" + getName() + " year :" + getYear();
     }
 }

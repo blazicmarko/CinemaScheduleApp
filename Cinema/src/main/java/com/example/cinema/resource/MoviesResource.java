@@ -15,10 +15,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -112,6 +116,13 @@ public class MoviesResource {
     public ResponseEntity<Object> insert(@RequestBody @Validated(RequestValidationSequence.class) MovieReq movieReq) {
         moviesService.insert(movieReq);
         getLogger().info("Movie with data " + movieReq.toString() + " inserted in table.");
+        return handleInsertInMovies();
+    }
+
+    @PostMapping(value = "/insert/{imdbId}")
+    public ResponseEntity<Object> insertWithId(@PathVariable("imdbId") String imdbId){
+        moviesService.insertWithId(imdbId);
+        getLogger().info("Movie with id on IMDB " + imdbId + " inserted in table.");
         return handleInsertInMovies();
     }
 
