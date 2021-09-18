@@ -15,15 +15,23 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.HttpStatusException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
 
 
 @Service
@@ -248,4 +256,39 @@ public class MoviesService {
     }
 
 
+    public void insertWithIdScrapper(String imdbId) {
+        String imdbUrl = "https://www.imdb.com/title/"+imdbId;
+        try {
+            Document doc = Jsoup.connect(imdbUrl).get();
+            Element title = doc.select("h1.gxLYZW").first();
+            Element year = doc.select("a.rgaOW").first();
+            Element grade =doc.select("span.iTLWoV").first();
+            Element genre =doc.select("a.fzmeux").first();
+            Element time =doc.select("li.ipc-inline-list__item").get(2);
+
+
+            MovieReq movieReq= new MovieReq();
+            movieReq.setName(title.wholeText());
+            movieReq.setYear(parseInt(year.wholeText()));
+            movieReq.setGrade(parseDouble(grade.wholeText()));
+            movieReq.setIdGenre(genreService.getGenreIdByName(genre.wholeText()));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm");
+            String formatedTime = time.wholeText().replace("h ",":");
+            formatedTime=formatedTime.replace("min","");
+            LocalTime localTimeObj = LocalTime.parse(formatedTime, formatter);
+            movieReq.setTime(localTimeObj);
+            MovieDB movieDB = makeDBModel(movieReq);
+            if(moviesMapper.checkForSameMovie(movieDB))
+                throw new MultipleMovieNameException("There is same movie in database");
+            getLogger().debug("DB operation insert:");
+            moviesMapper.insert(movieDB);
+            InitService.setMovieLastId(moviesMapper.getLastId());
+            InitService.setMovieNames(moviesMapper.getAllNames());
+        } catch (HttpStatusException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

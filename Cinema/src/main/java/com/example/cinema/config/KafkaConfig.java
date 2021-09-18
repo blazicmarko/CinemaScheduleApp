@@ -25,32 +25,32 @@ public class KafkaConfig {
     @Value(value = "${kafka.bootstrapAddress}")
     private String bootstrapAddress;
 
-    @Bean
-    public KafkaAdmin kafkaAdmin() {
-        Map<String, Object> configs = new HashMap<>();
-        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
-        return new KafkaAdmin(configs);
-    }
+//    @Bean
+//    public KafkaAdmin kafkaAdmin() {
+//        Map<String, Object> configs = new HashMap<>();
+//        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+//        return new KafkaAdmin(configs);
+//    }
+//
+//    @Bean
+//    public NewTopic topic1() {
+//        return new NewTopic("projection_change", 1, (short) 1);
+//    }
+//
+//    @Bean
+//    public ProducerFactory producerFactoryForProjection() {
+//        Map<String, Object> config = new HashMap<String, Object>();
+//        config.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, false);
+//        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+//        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+//        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+//        return new DefaultKafkaProducerFactory(config);
+//    }
 
-    @Bean
-    public NewTopic topic1() {
-        return new NewTopic("projection_change", 1, (short) 1);
-    }
-
-    @Bean
-    public ProducerFactory producerFactoryForProjection() {
-        Map<String, Object> config = new HashMap<String, Object>();
-        config.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, false);
-        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
-        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        return new DefaultKafkaProducerFactory(config);
-    }
-
-    @Bean
-    public KafkaTemplate<String, ProjectionKafka> kafkaTemplate() {
-        return new KafkaTemplate<String, ProjectionKafka>(producerFactoryForProjection());
-    }
+//    @Bean
+//    public KafkaTemplate<String, ProjectionKafka> kafkaTemplate() {
+//        return new KafkaTemplate<String, ProjectionKafka>(producerFactoryForProjection());
+//    }
 
 
 

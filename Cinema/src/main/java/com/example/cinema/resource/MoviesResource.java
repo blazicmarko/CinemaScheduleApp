@@ -126,6 +126,13 @@ public class MoviesResource {
         return handleInsertInMovies();
     }
 
+    @PostMapping(value = "/insert/{imdbId}/scrapper")
+    public ResponseEntity<Object> insertWithIdScrapper(@PathVariable("imdbId") String imdbId){
+        moviesService.insertWithIdScrapper(imdbId);
+        getLogger().info("Movie with id on IMDB " + imdbId + " inserted in table.");
+        return handleInsertInMovies();
+    }
+
     @Operation(summary = "Update movie")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "The movie is updated.",
